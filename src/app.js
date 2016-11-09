@@ -1,3 +1,21 @@
-import message from './message';
+import Module from './module';
+import Places from './places/places';
 
-console.log('>', message);
+
+
+Module.config([
+  '$stateProvider',
+  '$urlRouterProvider',
+(
+  $stateProvider,
+  $urlRouterProvider
+) => {
+  $stateProvider.state('home', {
+    url: '/',
+    template: '<places></places>'
+  });
+
+  $urlRouterProvider.otherwise('/');
+}]);
+
+export default module;
