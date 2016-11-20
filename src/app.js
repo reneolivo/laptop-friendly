@@ -9,4 +9,4 @@ Module.config([
   $urlRouterProvider.otherwise('/');
 }]);
 
-export default module;
+export default Module;
