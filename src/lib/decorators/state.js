@@ -7,12 +7,13 @@ export default function State(options = {}) {
 
     Module.config([
       '$stateProvider',
-    ($stateProvider) => {
-      $stateProvider.state(options.name, {
-        url: options.url,
-        template: options.template
-      });
-    }]);
+      ($stateProvider) => {
+        $stateProvider.state(options.name, {
+          url: options.url,
+          template: options.template
+        });
+      }
+    ]);
   };
 };
 

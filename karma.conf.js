@@ -20,7 +20,7 @@ module.exports = function(config) {
       ]
     },
     files: [
-      'src/**/*.spec.js'
+      'src/specs.js'
     ],
     preprocessors: {
       'src/**/*.js': [
