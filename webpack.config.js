@@ -2,9 +2,12 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const Extract = require('extract-text-webpack-plugin');
 
 const JSDIR = path.join(__dirname, 'src');
 const JSOUT = path.join(__dirname, 'dist');
+
+const extractCss = new Extract('styles.css');
 
 module.exports = {
   entry: path.join(JSDIR, 'app.js'),
@@ -26,11 +29,17 @@ module.exports = {
         loader: 'raw-loader',
         test: /\.html$/,
         exclude: /node_modules/
+      },
+      {
+        loader: extractCss.extract([ 'css-loader', 'sass-loader' ]),
+        test: /\.scss$/,
+        exclude: /node_modules/
       }
     ]
   },
   plugins: [
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
+    extractCss
   ],
   stats: {
     colors: true
