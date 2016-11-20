@@ -9,7 +9,17 @@ const JSOUT = path.join(__dirname, 'dist');
 
 const extractCss = new Extract('styles.css');
 
+let cssLoader = 'style-loader!css-loader!sass-loader';
+
+if (process.env.NODE_ENV === 'production') {
+  cssLoader = extractCss.extract([
+    'css-loader',
+    'sass-loader'
+  ]);
+}
+
 module.exports = {
+  debug: true,
   entry: path.join(JSDIR, 'app.js'),
   output: {
     path: JSOUT,
@@ -21,19 +31,33 @@ module.exports = {
   module: {
     loaders: [
       {
-        loader: 'babel-loader',
         test: /\.js$/,
+        loader: 'babel-loader',
         exclude: /node_modules/
       },
       {
-        loader: 'raw-loader',
         test: /\.html$/,
+        loader: 'raw-loader',
         exclude: /node_modules/
       },
       {
-        loader: extractCss.extract([ 'css-loader', 'sass-loader' ]),
         test: /\.scss$/,
+        loader: cssLoader,
         exclude: /node_modules/
+      },
+      {
+        test: /\.(ttf|eot|woff2?)$/,
+        loader: 'file-loader',
+        query: {
+          name: '../fonts/[name].[ext]'
+        }
+      },
+      {
+        test: /\.png$/,
+        loader: 'file-loader',
+        query: {
+          name: '../images/[hash:8].[ext]'
+        }
       }
     ]
   },

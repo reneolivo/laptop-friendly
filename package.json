@@ -50,6 +50,7 @@
     "raw-loader": "^0.5.1",
     "requirejs": "^2.3.2",
     "sass-loader": "^4.0.2",
+    "style-loader": "^0.13.1",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2"
   },

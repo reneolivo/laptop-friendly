@@ -1,8 +1,32 @@
+$roboto-font-path: "~materialize-css/fonts/roboto/";
+@import '~materialize-css/sass/materialize';
+
 body {
   color: #333;
   background: WhiteSmoke;
+}
+
+#wrapper {
+  @extend .container;
 
   h1 {
-    color: orange;
+    position: relative;
+    padding-left: 160px;
+    padding-bottom: 10px;
+    width: 340px;
+    font-size: 3em;
+    border-bottom: 3px solid #333;
+
+    &:before {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      content: '';
+      display: block;
+      width: 140px;
+      height: 140px;
+      background: url('../images/laptop-friendly.png') left center no-repeat;
+      background-size: 140px;
+    }
   }
 }
