@@ -46,7 +46,14 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        test: /\.(ttf|eot|woff2?)$/,
+        test: /\.(ttf|eot|woff2?)(\?v=.*)?$/,
+        loader: 'file-loader',
+        query: {
+          name: '../fonts/[name].[ext]'
+        }
+      },
+      {
+        test: /fonts\/.*\.svg(\?v=.*)?$/,
         loader: 'file-loader',
         query: {
           name: '../fonts/[name].[ext]'

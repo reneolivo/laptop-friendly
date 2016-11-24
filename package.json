@@ -61,6 +61,7 @@
   },
   "dependencies": {
     "angular": "^1.5.8",
-    "angular-ui-router": "^0.3.2"
+    "angular-ui-router": "^0.3.2",
+    "font-awesome": "^4.7.0"
   }
 }
