@@ -1,7 +1,7 @@
-import Places from './places';
-import Data from '../data';
+import './places';
 
 describe('Places Service', () => {
+  let Places;
   const listings = [
     {
       name: 'Place 1'
@@ -11,9 +11,13 @@ describe('Places Service', () => {
     }
   ];
 
-  beforeEach(() => {
-    spyOn(Data, 'places').and.returnValue(listings);
-  });
+  beforeEach(angular.mock.module(($provide) => {
+    $provide.value('laptopFriendly.data.places', listings);
+  }));
+
+  beforeEach(inject((PlacesService) => {
+    Places = PlacesService;
+  }));
 
   describe('Get All', () => {
     it('should define a .getAll method', () => {

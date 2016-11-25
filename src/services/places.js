@@ -1,10 +1,13 @@
-import Data from '../data';
+import {Service, Inject} from '../lib/decorators';
 
-class Places {
+@Service('PlacesService')
+@Inject('laptopFriendly.data.places')
+export default class Places {
+  constructor(places) {
+    this.places = places;
+  }
+
   getAll() {
-    const places = Data.places();
-    return Promise.resolve(places);
+    return Promise.resolve(this.places);
   }
 }
-
-export default new Places();
