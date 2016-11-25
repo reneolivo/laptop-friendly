@@ -1,7 +1,14 @@
 describe('Places', () => {
-  it('should exist', () => {
+  it('should display a list of places', () => {
     return browser.get('/')
-    .then(() => element(by.css('section#places h2')))
-    .then((h2) => expect(h2.getText()).toBe('Hello'));
+    .then(() => element.all(by.css('#places-listing article')).count())
+    .then((count) => expect(count).toBe(8));
+  });
+
+  it('should display a place details when clicked', () => {
+    return browser.get('/')
+    .then(() => element(by.css('#places-listing article:first-child')).click())
+    .then(() => element(by.css('#place-details h2')).getText())
+    .then((text) => expect(text).toBe('Listing 1'));
   });
 });

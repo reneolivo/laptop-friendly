@@ -65,6 +65,10 @@ module.exports = {
         query: {
           name: '../images/[hash:8].[ext]'
         }
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader',
       }
     ]
   },
