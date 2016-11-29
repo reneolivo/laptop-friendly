@@ -1,4 +1,4 @@
-import {Component, State} from '../lib/decorators';
+import {Component, State, Inject} from '../lib/decorators';
 
 @Component({
   template: require('./places.html')
@@ -7,8 +7,17 @@ import {Component, State} from '../lib/decorators';
   name: 'Home',
   url: '/'
 })
+@Inject('PlacesService')
 export default class Places {
-  constructor() {
-    this.hello = 'world';
+  constructor(PlacesService) {
+    this.PlacesService = PlacesService;
+
+    this.loadPlaces();
+  }
+
+  loadPlaces() {
+    this.PlacesService.getAll().then((places) => {
+      this.places = places;
+    });
   }
 }

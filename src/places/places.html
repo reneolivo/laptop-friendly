@@ -1,4 +1,15 @@
-<section id="places">
-  <h2>Hello</h2>
-  <p>{{ $ctrl.hello }}</p>
+<section id="places-listing">
+  <article ng-repeat="place in $ctrl.places" ng-click="$ctrl.remove(place)">
+    <img src="https://pbs.twimg.com/profile_images/587394463799980033/TU69UqgO.jpg" />
+
+    <h3>{{ place.name }}</h3>
+
+    <div class="facilities">
+      <i class="fa fa-wifi"></i>
+      <i class="fa fa-phone"></i>
+      <i class="fa fa-moon-o"></i>
+    </div>
+
+    <address>Phasellus consectetuer vestibulum elit. Suspendisse eu ligula.</address>
+  </article>
 </section>

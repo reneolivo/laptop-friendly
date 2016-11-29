@@ -1,14 +1,58 @@
 import Places from './places';
+import '../lib/helpers/angular/compile';
+
 
 describe('Places', () => {
-  let $componentController;
+  let PlacesService;
+  let Ctrl;
+  let listings = [
+    { name: 'Place 1' },
+    { name: 'Place 2' }
+  ];
 
-  beforeEach(inject((_$componentController_, _$injector_) => {
-    $componentController = _$componentController_;
-  }));
+  beforeEach(() => {
+    PlacesService = {
+      getAll: () => Promise.resolve(listings)
+    };
+
+    Ctrl = new Places(PlacesService);
+  });
 
   it('should be defined', () => {
-    const ctrl = $componentController('places');
-    expect(ctrl.hello).toBe('world');
+    expect(Ctrl).toBeDefined();
+  });
+
+  it('should load a list of places', (done) => {
+    setTimeout(() => {
+      expect(Ctrl.places).toBe(listings);
+      done();
+    }, 0);
+  });
+
+  describe('Component', () => {
+    let compile;
+
+    const listings = [
+      {
+        name: 'Place 1'
+      },
+      {
+        name: 'Place 2'
+      }
+    ];
+
+    beforeEach(angular.mock.module(($provide) => {
+      $provide.value('laptopFriendly.data.places', listings);
+    }));
+
+    beforeEach(inject((CompileService) => {
+      compile = CompileService;
+    }));
+
+    it('should display the two listings', (done) => {
+      compile.compile('<places></places>')
+      .digest((el) => expect(el.find('article').length).toBe(2))
+      .digest(() => done());
+    });
   });
 });

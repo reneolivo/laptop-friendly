@@ -1,6 +1,7 @@
 import 'angular';
 import 'angular-mocks';
 import './data';
+import './lib/helpers/angular/compile';
 
 beforeEach(angular.mock.module('laptopFriendly'));
 

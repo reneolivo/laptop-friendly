@@ -1,6 +1,8 @@
 import Module from './module';
-import Places from './places/places';
+import './services/places';
+import './places/places';
 import './styles/styles.scss';
+import './lib/helpers/angular/compile';
 
 
 
