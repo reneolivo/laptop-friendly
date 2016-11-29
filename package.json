@@ -10,11 +10,7 @@
     "server:stop": "pm2 stop server.js > /dev/null || true",
     "start": "npm run build && npm run server",
     "test": "NODE_ENV=test karma start --log-level debug",
-    "test:watch": "NODE_ENV=test karma start --auto-watch --no-single-run",
-    "e2e": "npm run start && npm run webdriver:update && npm run webdriver:start && protractor",
-    "e2e:watch": "npm run e2e -- --elementExplorer",
-    "webdriver:update": "selenium-standalone",
-    "webdriver:start": "webdriver-manager start --detach"
+    "test:watch": "NODE_ENV=test karma start --auto-watch --no-single-run"
   },
   "keywords": [
     "angularjs",
@@ -47,7 +43,6 @@
     "live-server": "^1.1.0",
     "node-sass": "^3.13.0",
     "pm2": "^2.1.5",
-    "protractor": "^4.0.11",
     "raw-loader": "^0.5.1",
     "requirejs": "^2.3.2",
     "sass-loader": "^4.0.2",
