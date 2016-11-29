@@ -1,5 +1,6 @@
 import 'angular';
 import 'angular-mocks';
+import 'jasmine2-custom-message';
 import './data';
 import './lib/helpers/angular/compile';
 

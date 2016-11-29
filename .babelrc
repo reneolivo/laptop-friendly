@@ -2,6 +2,7 @@
   "presets": [ "es2015" ],
   "plugins": [
     "transform-decorators-legacy",
-    "__coverage__"
+    "__coverage__",
+    "transform-class-properties"
   ]
 }

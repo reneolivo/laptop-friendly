@@ -1,4 +1,5 @@
 import {Component, State, Inject} from '../lib/decorators';
+import './place-details';
 
 @Component({
   template: require('./places.html')

@@ -28,6 +28,8 @@ export class TaskQueue {
     if (this.currentTask === null) return;
 
     this.currentTask.execute(() => {
+      if (this.currentTask === null) return;
+
       this.currentTask = this.currentTask.next;
 
       this.execute();

@@ -1,0 +1,13 @@
+<article>
+  <img ng-if="$ctrl.place.images.length > 0" ng-src="{{ $ctrl.place.images[0].src }}" />
+  <img ng-if="!$ctrl.place.images || $ctrl.place.images.length === 0" src="/images/default-place.png" />
+
+  <h3>{{ $ctrl.place.name }}</h3>
+
+  <div class="facilities">
+    <i class="fa {{ $ctrl.icons[ facility ] }}" ng-repeat="facility in $ctrl.place.facilities | limitTo:3">
+    </i>
+  </div>
+
+  <address>{{ $ctrl.place.address }}</address>
+</article>

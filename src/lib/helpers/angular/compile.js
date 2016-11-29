@@ -10,8 +10,11 @@ export default class CompileService {
     this.$rootScope = $rootScope;
   }
 
-  compile(template, scope = {}) {
-    scope = this.$rootScope.$new(scope);
+  compile(template, scopeData = {}) {
+    let scope = this.$rootScope.$new();
+
+    Object.assign(scope, scopeData);
+
     const element = this.$compile(template)(scope);
 
     return new DigestQueue(element, scope);

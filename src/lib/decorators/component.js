@@ -8,9 +8,11 @@ export default function Component(options = {}) {
     let name = options.name || target.name;
     name = Helpers.string.firstLetterToLowerCase(name);
 
-    Module.component(name, {
-      template: options.template,
-      controller: target
-    });
+    options.template = options.template || '';
+    options.controller = target;
+
+    delete options.name;
+
+    Module.component(name, options);
   };
 }

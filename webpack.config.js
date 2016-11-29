@@ -63,7 +63,7 @@ module.exports = {
         test: /\.png$/,
         loader: 'file-loader',
         query: {
-          name: '../images/[hash:8].[ext]'
+          name: '../images/[name].[ext]'
         }
       },
       {

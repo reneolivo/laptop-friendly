@@ -19,8 +19,12 @@ module.exports = function(config) {
       ]
     },
     files: [
-      'src/specs.js'
+      'src/specs.js',
+      { pattern: 'images/**/*.png', served: true, included: false, watched: false }
     ],
+    proxies: {
+      '/images/': '/base/images/'
+    },
     preprocessors: {
       'src/**/*.js': [
         'webpack',
