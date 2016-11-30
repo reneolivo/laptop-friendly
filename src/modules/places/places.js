@@ -1,12 +1,8 @@
-import {Component, State, Inject} from '../lib/decorators';
+import {Component, State, Inject} from '../../lib/decorators';
 import './place-details';
 
 @Component({
   template: require('./places.html')
-})
-@State({
-  name: 'Home',
-  url: '/'
 })
 @Inject('PlacesService')
 export default class Places {

@@ -1,5 +1,4 @@
 import Places from './places';
-import '../lib/helpers/angular/compile';
 
 
 describe('Places', () => {

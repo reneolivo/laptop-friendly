@@ -1,5 +1,5 @@
 import PlaceDetails from './place-details';
-import FacilityIcons from '../config/facility-icons';
+import FacilityIcons from '../../config/facility-icons';
 
 describe('PlaceDetails', () => {
   describe('Component', () => {

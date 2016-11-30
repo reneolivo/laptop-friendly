@@ -1,6 +1,6 @@
 import Module from './module';
 import './services/places';
-import './places/places';
+import './modules/home/home';
 import './styles/styles.scss';
 
 

@@ -1,6 +1,6 @@
-import {Component, Bind} from '../lib/decorators';
-import FacilityIcons from '../config/facility-icons';
-import '../images/default-place.png';
+import {Component, Bind} from '../../lib/decorators';
+import FacilityIcons from '../../config/facility-icons';
+import '../../images/default-place.png';
 
 
 @Component({
