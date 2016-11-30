@@ -1,5 +1,6 @@
 import {Component, State} from '../../lib/decorators';
 import '../places/places';
+import '../places/place-details';
 
 @Component({
   template: require('./home.html')

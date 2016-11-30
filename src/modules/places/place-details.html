@@ -1,0 +1,19 @@
+<section id="place-details" ng-if="$ctrl.place">
+  <h2>{{ $ctrl.place.name }}</h2>
+
+  <iframe ng-attr-src="{{ $ctrl.place.mapUrl }}" width="600" height="250" frameborder="0" style="border:0" allowfullscreen></iframe>
+  <address>{{ $ctrl.place.address }}</address>
+
+  <ul class="facilities">
+    <li ng-repeat="facility in $ctrl.place.facilities">
+      <i class="fa {{ $ctrl.icons[ facility ] }}"></i>
+      <span>{{ facility }}</span>
+    </li>
+  </ul>
+
+  <div
+  class="description"
+  ng-bind-html="$ctrl.place.description"
+  ></div>
+
+</section>

@@ -13,10 +13,10 @@ describe('PlaceDetails', () => {
         { src: 'https://www.example.com/images/2.jpg' }
       ],
       facilities: [
-        'free-wifi',
-        'coffee',
-        'lunch-menu',
-        'opens-late'
+        'Free Wifi',
+        'Coffee',
+        'Lunch Menu',
+        'Opens Late'
       ]
     };
 

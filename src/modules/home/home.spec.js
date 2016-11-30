@@ -15,5 +15,11 @@ describe('Home component', () => {
       .digest((el, places) => expect(places.length).toBe(1))
       .digest(done);
     });
+
+    it('should define a place-details component', (done) => {
+      component.digest((el) => el.find('place-details'))
+      .digest((el, placeDetails) => expect(placeDetails.length).toBe(1))
+      .digest(done);
+    });
   });
 });

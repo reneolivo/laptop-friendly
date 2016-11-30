@@ -1,6 +1,6 @@
 export default {
-  'free-wifi': 'fa-wifi',
-  'lunch-menu': 'fa-cutlery',
-  'opens-late': 'fa-moon-o',
-  'coffee': 'fa-coffee'
+  'Free Wifi': 'fa-wifi',
+  'Lunch Menu': 'fa-cutlery',
+  'Opens Late': 'fa-moon-o',
+  'Coffee': 'fa-coffee'
 };
