@@ -1,4 +1,4 @@
-import PlaceDetails from './place-details';
+import PlaceDetails from './place-resume';
 import FacilityIcons from '../../config/facility-icons';
 
 describe('PlaceDetails', () => {
@@ -23,7 +23,7 @@ describe('PlaceDetails', () => {
     beforeEach(inject((CompileService) => {
       compiler = CompileService;
       component = compiler.compile(
-        '<place-details place="place"></place-details>',
+        '<place-resume place="place"></place-resume>',
         { place: place }
       );
     }));
@@ -78,7 +78,7 @@ describe('PlaceDetails', () => {
       place.images = [];
 
       compiler.compile(
-        '<place-details place="place"></place-details>',
+        '<place-resume place="place"></place-resume>',
         { place: place }
       )
       .digest((el) => el.find('img').attr('src'))

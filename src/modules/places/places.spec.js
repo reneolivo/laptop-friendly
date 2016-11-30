@@ -50,7 +50,7 @@ describe('Places', () => {
 
     it('should display the two listings', (done) => {
       compile.compile('<places></places>')
-      .digest((el) => expect(el.find('place-details').length).toBe(2))
+      .digest((el) => expect(el.find('place-resume').length).toBe(2))
       .digest(() => done());
     });
   });

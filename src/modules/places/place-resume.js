@@ -4,12 +4,12 @@ import '../../images/default-place.png';
 
 
 @Component({
-  template: require('./place-details.html'),
+  template: require('./place-resume.html'),
   bindings: {
     place: '='
   }
 })
-export default class PlaceDetails {
+export default class PlaceResume {
   constructor() {
     this.icons = FacilityIcons;
   }
