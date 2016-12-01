@@ -29,7 +29,7 @@ describe('Place Details component', () => {
       compiler = CompileService;
       component = compiler.compile(
         '<place-details place="place"></place-details>',
-        { place: place }
+        { place }
       );
     }));
 

@@ -24,7 +24,7 @@ describe('PlaceDetails', () => {
       compiler = CompileService;
       component = compiler.compile(
         '<place-resume place="place"></place-resume>',
-        { place: place }
+        { place }
       );
     }));
 
@@ -79,7 +79,7 @@ describe('PlaceDetails', () => {
 
       compiler.compile(
         '<place-resume place="place"></place-resume>',
-        { place: place }
+        { place }
       )
       .digest((el) => el.find('img').attr('src'))
       .digest((el, src) => expect(src).toContain('images/default-place.png'))

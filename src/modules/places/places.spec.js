@@ -29,7 +29,8 @@ describe('Places', () => {
   });
 
   describe('Component', () => {
-    let compile;
+    let compiler;
+    let component;
 
     const listings = [
       {
@@ -45,13 +46,36 @@ describe('Places', () => {
     }));
 
     beforeEach(inject((CompileService) => {
-      compile = CompileService;
+      compiler = CompileService;
+      component = compiler.compile('<places></places>');
     }));
 
     it('should display the two listings', (done) => {
-      compile.compile('<places></places>')
-      .digest((el) => expect(el.find('place-resume').length).toBe(2))
+      component.digest((el) => el.find('place-resume'))
+      .digest((el, placeResumes) => expect(placeResumes.length).toBe(2))
       .digest(() => done());
+    });
+
+    describe('Selecting a place', () => {
+      let placeSelected;
+
+      beforeEach(() => {
+        placeSelected = jasmine.createSpy('placeSelected');
+
+        component = compiler.compile(`
+            <places
+            on-place-selected="placeSelected($place)"
+            ></places>
+          `,
+          { placeSelected }
+        );
+      });
+
+      it('should emit the place that was selected', (done) => {
+        component.digest((el) => el.find('article').first().click())
+        .digest(() => expect(placeSelected).toHaveBeenCalledWith(listings[0]))
+        .digest(done);
+      });
     });
   });
 });

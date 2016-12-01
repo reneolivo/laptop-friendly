@@ -10,5 +10,7 @@ import '../places/place-details';
   url: '/'
 })
 export default class Home {
-
+  selectPlace(place) {
+    this.selectedPlace = place;
+  }
 }

@@ -2,7 +2,10 @@ import {Component, State, Inject} from '../../lib/decorators';
 import './place-resume';
 
 @Component({
-  template: require('./places.html')
+  template: require('./places.html'),
+  bindings: {
+    onPlaceSelected: '&'
+  }
 })
 @Inject('PlacesService')
 export default class Places {
@@ -16,5 +19,9 @@ export default class Places {
     this.PlacesService.getAll().then((places) => {
       this.places = places;
     });
+  }
+
+  selectPlace(place) {
+    this.onPlaceSelected({ $place: place });
   }
 }

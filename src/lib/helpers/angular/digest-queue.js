@@ -1,4 +1,5 @@
 import jQuery from 'jquery';
+import Angular from 'angular';
 import {TaskQueue} from '../structures/task-queue';
 
 export class DigestQueue {
@@ -21,6 +22,16 @@ export class DigestQueue {
     });
 
     this.taskQueue.execute();
+
+    return this;
+  }
+
+  controller(callback) {
+    this.digest(callback);
+    this.digest((el, elementWithController) => {
+      return angular.element(elementWithController)
+      .isolateScope().$ctrl;
+    });
 
     return this;
   }

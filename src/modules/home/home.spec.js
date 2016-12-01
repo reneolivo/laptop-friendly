@@ -21,5 +21,25 @@ describe('Home component', () => {
       .digest((el, placeDetails) => expect(placeDetails.length).toBe(1))
       .digest(done);
     });
+
+    describe('Viewing place details', () => {
+      let place = { name: 'Laptop Café' };
+
+      it('should set .selectedPlace to the selected place', (done) => {
+        component.controller((el) => el.find('places'))
+        .digest((el, placesCtrl) => placesCtrl.onPlaceSelected({$place: place}))
+        .controller((el) => el)
+        .digest((el, homeCtrl) => expect(homeCtrl.selectedPlace).toBe(place))
+        .digest(done);
+      });
+
+      it('should pass .selectedPlace to the place-details component', (done) => {
+        component.controller((el) => el)
+        .digest((el, homeCtrl) => homeCtrl.selectedPlace = place)
+        .controller((el) => el.find('place-details'))
+        .digest((el, placeDetailsCtrl) => expect(placeDetailsCtrl.place).toBe(place))
+        .digest(done);
+      });
+    });
   });
 });
