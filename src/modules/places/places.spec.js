@@ -28,6 +28,22 @@ describe('Places', () => {
     }, 0);
   });
 
+  describe('selecting places', () => {
+    it('should define a .selectPlace method', () => {
+      expect(typeof Ctrl.selectPlace).toBe('function');
+    });
+
+    it('should call .onPlaceSelected when a place is selected', () => {
+      Ctrl.onPlaceSelected = jasmine.createSpy('onPlaceSelected');
+
+      Ctrl.selectPlace(listings[0]);
+
+      expect(Ctrl.onPlaceSelected).toHaveBeenCalledWith({
+        $place: listings[0]
+      });
+    });
+  });
+
   describe('Component', () => {
     let compiler;
     let component;
