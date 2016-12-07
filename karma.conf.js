@@ -9,6 +9,9 @@ module.exports = function(config) {
       'spec',
       'coverage',
     ],
+    specReporter: {
+      suppressSkipped: true
+    },
     coverageReporter: {
       includeAllSources: true,
       dir: 'coverage',

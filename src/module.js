@@ -1,9 +1,7 @@
-import 'angular';
-import 'angular-ui-router';
-import 'angular-sanitize';
+import './vendors';
 import './data';
+// configures firebase for the first time:
 import './services/firebase';
-import 'angularfire';
 
 const Module =  angular.module('laptopFriendly', [
   'ui.router',
