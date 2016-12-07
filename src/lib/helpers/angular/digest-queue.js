@@ -26,14 +26,45 @@ export class DigestQueue {
     return this;
   }
 
-  controller(callback) {
+  controller(callback = false) {
+    if (typeof callback !== 'function') {
+      this._getRootController();
+    } else {
+      this._getChildController(callback);
+    }
+
+    return this;
+  }
+
+  find(elementName) {
+    this.digest((el) => el.find(elementName));
+
+    return this;
+  }
+
+  click(elementName) {
+    this.find(elementName);
+
+    this.digest((el, child) => {
+      child.click();
+      return child;
+    });
+
+    return this;
+  }
+
+  _getRootController() {
+    this.digest((el) => {
+      return angular.element(el).isolateScope().$ctrl;
+    });
+  }
+
+  _getChildController(callback) {
     this.digest(callback);
     this.digest((el, elementWithController) => {
       return angular.element(elementWithController)
       .isolateScope().$ctrl;
     });
-
-    return this;
   }
 
   _createTaskQueue() {

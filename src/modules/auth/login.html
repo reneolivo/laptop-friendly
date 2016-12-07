@@ -1,0 +1,17 @@
+<form class="login-form">
+  <div class="input">
+    <label for="login-form-email">Email:</label>
+    <input ng-model="$ctrl.email" type="email" id="login-form-email" />
+  </div>
+
+  <div class="input">
+    <label for="login-form-password">Password:</label>
+    <input ng-model="$ctrl.password" type="password" id="login-form-password" />
+  </div>
+
+  <div class="button">
+    <button class="login"
+    ng-click="$ctrl.login();"
+    >Login</button>
+  </div>
+</form>
