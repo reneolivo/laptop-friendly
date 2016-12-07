@@ -1,13 +1,17 @@
 import {Service, Inject} from '../lib/decorators';
+import FireBase from './firebase';
+
 
 @Service('PlacesService')
-@Inject('laptopFriendly.data.places')
+@Inject('$firebaseArray')
 export default class Places {
-  constructor(places) {
-    this.places = places;
+  constructor($firebaseArray) {
+    this.$firebaseArray = $firebaseArray;
+
+    this.db = FireBase.database('places');
   }
 
   getAll() {
-    return Promise.resolve(this.places);
+    return this.$firebaseArray(this.db);
   }
 }

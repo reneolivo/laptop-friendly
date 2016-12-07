@@ -1,6 +1,6 @@
 <section id="places-listing">
   <place-resume
-  ng-repeat="place in $ctrl.places"
+  ng-repeat="place in $ctrl.places | limitTo:15"
   place="place"
   ng-click="$ctrl.selectPlace(place)"
   ></place-resume>

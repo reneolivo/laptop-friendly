@@ -16,9 +16,7 @@ export default class Places {
   }
 
   loadPlaces() {
-    this.PlacesService.getAll().then((places) => {
-      this.places = places;
-    });
+    this.places = this.PlacesService.getAll();
   }
 
   selectPlace(place) {

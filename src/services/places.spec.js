@@ -1,7 +1,11 @@
-import './places';
+import Places from './places';
+import FireBase from './firebase';
 
 describe('Places Service', () => {
-  let Places;
+  let Ctrl;
+  let spy;
+  let $firebaseArray;
+
   const listings = [
     {
       name: 'Place 1'
@@ -11,28 +15,30 @@ describe('Places Service', () => {
     }
   ];
 
-  beforeEach(angular.mock.module(($provide) => {
-    $provide.value('laptopFriendly.data.places', listings);
-  }));
+  beforeEach(() => {
+    spyOn(FireBase, 'database').and.returnValue(listings);
+    $firebaseArray = jasmine.createSpy('$firebaseArray')
+    .and.returnValue({array: listings});
 
-  beforeEach(inject((PlacesService) => {
-    Places = PlacesService;
-  }));
+    Ctrl = new Places($firebaseArray);
+  });
+
+  describe('init', () => {
+    it('should define a places database', () => {
+      expect(FireBase.database).toHaveBeenCalledWith('places');
+    });
+  });
 
   describe('Get All', () => {
     it('should define a .getAll method', () => {
-      expect(typeof Places.getAll).toBe('function');
+      expect(typeof Ctrl.getAll).toBe('function');
     });
 
-    it('should return a promise', () => {
-      const result = Places.getAll();
-      expect(result instanceof Promise).toBe(true);
-    });
+    it('should return Place 1 and Place 2', () => {
+      const result = Ctrl.getAll();
 
-    it('should return Place 1 and Place 2', (done) => {
-      Places.getAll()
-      .then((places) => expect(places).toBe(listings))
-      .then(() => done());
+      expect(result).toEqual({array: listings});
+      expect($firebaseArray).toHaveBeenCalledWith(listings);
     });
   });
 });

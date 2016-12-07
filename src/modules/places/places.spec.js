@@ -11,7 +11,7 @@ describe('Places', () => {
 
   beforeEach(() => {
     PlacesService = {
-      getAll: () => Promise.resolve(listings)
+      getAll: () => listings
     };
 
     Ctrl = new Places(PlacesService);
@@ -48,7 +48,7 @@ describe('Places', () => {
     let compiler;
     let component;
 
-    const listings = [
+    let listings = [
       {
         name: 'Place 1'
       },
@@ -58,7 +58,11 @@ describe('Places', () => {
     ];
 
     beforeEach(angular.mock.module(($provide) => {
-      $provide.value('laptopFriendly.data.places', listings);
+      PlacesService = {
+        getAll: jasmine.createSpy('getAll').and.returnValue(listings)
+      };
+
+      $provide.value('PlacesService', PlacesService);
     }));
 
     beforeEach(inject((CompileService) => {
@@ -66,10 +70,31 @@ describe('Places', () => {
       component = compiler.compile('<places></places>');
     }));
 
-    it('should display the two listings', (done) => {
-      component.digest((el) => el.find('place-resume'))
-      .digest((el, placeResumes) => expect(placeResumes.length).toBe(2))
-      .digest(() => done());
+    describe('Displaying listings', () => {
+      it('should display the two listings', (done) => {
+        expectPlacesResumeToEqual(component, 2, done);
+      });
+
+      it('should not display any listings if listings are empty', (done) => {
+        PlacesService.getAll = () => [];
+        component = compiler.compile('<places></places>')
+
+        expectPlacesResumeToEqual(component, 0, done);
+      });
+
+      it('should not display more than 15 listings at a time', (done) => {
+        listings = Array.from(new Array(100)).map((a, i) => ({ name: `Place ${i}`}));
+        PlacesService.getAll = () => listings;
+        component = compiler.compile('<places></places>')
+
+        expectPlacesResumeToEqual(component, 15, done);
+      });
+
+      function expectPlacesResumeToEqual(component, number, done) {
+        component.digest((el) => el.find('place-resume'))
+        .digest((el, placeResumes) => expect(placeResumes.length).toBe(number))
+        .digest(done);
+      }
     });
 
     describe('Selecting a place', () => {

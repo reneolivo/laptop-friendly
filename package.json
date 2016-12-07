@@ -61,7 +61,10 @@
     "angular": "^1.5.8",
     "angular-sanitize": "^1.5.9",
     "angular-ui-router": "^0.3.2",
+    "angularfire": "^2.1.0",
+    "firebase": "^3.6.3",
     "font-awesome": "^4.7.0",
+    "geofire": "^4.1.2",
     "jquery": "^3.1.1"
   }
 }
