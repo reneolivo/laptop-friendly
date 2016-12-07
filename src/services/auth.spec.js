@@ -7,7 +7,9 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     fireAuth = {
-      $signInWithEmailAndPassword: jasmine.createSpy('$signIn')
+      $signInWithEmailAndPassword: jasmine.createSpy('$signIn'),
+      $onAuthStateChanged: jasmine.createSpy('$onAuth'),
+      $getAuth: jasmine.createSpy('$getAuth')
     };
 
     scope = {
@@ -34,6 +36,29 @@ describe('AuthService', () => {
         scope.email,
         scope.password
       );
+    });
+  });
+
+  describe('.onUserChange()', () => {
+    it('should define a .onUserChange() method', () => {
+      expect(typeof service.onUserChange).toBe('function');
+    });
+
+    it('should call fireAuth.$onAuthStateChanged', () => {
+      let callback = () => true;
+      service.onUserChange(callback);
+      expect(fireAuth.$onAuthStateChanged).toHaveBeenCalledWith(callback);
+    });
+  });
+
+  describe('.getCurrentUser()', () => {
+    it('should define a .getCurrentUser() method', () => {
+      expect(typeof service.getCurrentUser).toBe('function');
+    });
+
+    it('should call fireAuth.$getAuth()', () => {
+      service.getCurrentUser();
+      expect(fireAuth.$getAuth).toHaveBeenCalled();
     });
   });
 });

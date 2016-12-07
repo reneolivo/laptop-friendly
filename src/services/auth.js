@@ -10,4 +10,12 @@ export default class AuthService {
   login(email, password) {
     this.fireAuth.$signInWithEmailAndPassword(email, password);
   }
+
+  onUserChange(callback) {
+    this.fireAuth.$onAuthStateChanged(callback);
+  }
+
+  getCurrentUser() {
+    return this.fireAuth.$getAuth();
+  }
 }
