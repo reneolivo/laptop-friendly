@@ -1,4 +1,15 @@
 <div id="home-wrapper">
+  <user user="$ctrl.user"></user>
+
+  <button class="login"
+  ng-if="$ctrl.user == null"
+  ng-click="$ctrl.loginModal.open()"
+  >Login</button>
+
+  <login-modal
+  login-modal-ctrl="$ctrl.loginModal"
+  ></login-modal>
+
   <places on-place-selected="$ctrl.selectPlace($place)"></places>
 
   <place-details place="$ctrl.selectedPlace"></place-details>

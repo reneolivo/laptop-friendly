@@ -4,6 +4,9 @@ import 'jasmine2-custom-message';
 import './data';
 import './lib/helpers/angular/compile';
 
+import firebase from 'firebase';
+window.firebase = firebase;
+
 beforeEach(angular.mock.module('laptopFriendly'));
 
 angular.module('laptopFriendly').config(($sceDelegateProvider) => {

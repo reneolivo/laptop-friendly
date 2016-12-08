@@ -1,4 +1,5 @@
 import {Component, Inject} from '../../lib/decorators';
+import '../../services/auth';
 
 @Component({
   bindings: {

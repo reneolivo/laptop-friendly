@@ -3,7 +3,7 @@ import {Component, Inject} from '../lib/decorators';
 @Component({
   template: require('./modal.html'),
   bindings: {
-    modalCtrl: '='
+    modalCtrl: '=?'
   },
   transclude: {
     'modal-content': 'modalContent',
@@ -16,7 +16,7 @@ export default class Modal {
     this.modalCtrl = this;
 
     this.element = element;
-    this.modalElement = jQuery(this.element.find('.modal'));
+    this.modalElement = jQuery(this.element.find('.modal')).modal();
   }
 
   open() {
