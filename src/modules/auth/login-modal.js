@@ -16,7 +16,6 @@ export default class LoginModal {
   }
 
   open() {
-    console.log('#OPEN:', this.modal);
     this.modal.open();
   }
 
