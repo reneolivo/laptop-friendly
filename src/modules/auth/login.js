@@ -3,6 +3,7 @@ import {Component, Inject} from '../../lib/decorators';
 @Component({
   template: require('./login.html'),
   bindings: {
+    loginCtrl: '=?',
     showButtons: '@',
     onLoginSuccess: '&',
     onLoginError: '&'
@@ -15,6 +16,8 @@ export default class Login {
   showButtons = true;
 
   constructor(AuthService) {
+    this.loginCtrl = this;
+
     this.authService = AuthService;
   }
 

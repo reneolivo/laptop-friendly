@@ -172,11 +172,13 @@ describe('LoginModal', () => {
 
     describe('Opening and Closing', () => {
       let modal;
+      let ctrl;
 
       beforeEach(() => {
         component.controller()
-        .digest((el, ctrl) => {
-          modal = ctrl.modal;
+        .digest((el, $ctrl) => {
+          ctrl = $ctrl;
+          modal = $ctrl.modal;
         });
       });
 
@@ -198,6 +200,40 @@ describe('LoginModal', () => {
         .controller()
         .digest((el, ctrl) => ctrl.close())
         .digest(() => expect(modal.close).toHaveBeenCalled())
+        .digest(done);
+      });
+
+      it('should display a close button on the footer', (done) => {
+        component.find('modal-footer button.close')
+        .digest((el, close) => expect(close.length).toBe(1))
+        .digest(done);
+      });
+
+      it('should close the modal when clicking button.close', (done) => {
+        component.digest(() => spyOn(ctrl, 'close'))
+        .click('modal-footer button.close')
+        .digest(() => expect(ctrl.close).toHaveBeenCalled())
+        .digest(done);
+      });
+    });
+
+    describe('Loging in', () => {
+      it('should add a button.login button to the modal-footer', (done) => {
+        component.find('modal-footer button.login')
+        .digest((el, login) => expect(login.length).toBe(1))
+        .digest(done);
+      });
+
+      it('should call login.login() when clicking button.login', (done) => {
+        let loginCtrl;
+
+        component.controller((el) => el.find('login'))
+        .digest((el, $ctrl) => {
+          loginCtrl = $ctrl;
+          spyOn(loginCtrl, 'login');
+        })
+        .click('modal-footer button.login')
+        .digest(() => expect(loginCtrl.login).toHaveBeenCalled())
         .digest(done);
       });
     });

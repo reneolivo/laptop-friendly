@@ -2,10 +2,23 @@
   <modal modal-ctrl="$ctrl.modal">
     <modal-content>
       <login
+      login-ctrl="$ctrl.loginCtrl"
       show-buttons="false"
       on-login-success="$ctrl.loginSuccess($user)"
       on-login-error="$ctrl.loginError($error)"
       ></login>
     </modal-content>
+
+    <modal-footer>
+      <div class="button">
+        <button class="close"
+        ng-click="$ctrl.close()"
+        >Close</button>
+
+        <button class="login"
+        ng-click="$ctrl.loginCtrl.login()"
+        >Login</button>
+      </div>
+    </modal-footer>
   </modal>
 </div>

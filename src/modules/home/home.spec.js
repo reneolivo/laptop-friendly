@@ -95,7 +95,7 @@ describe('Home component', () => {
 
             spyOn(loginModalCtrl, 'open');
           })
-          .click('button.login')
+          .click('#home-wrapper > button.login')
           .digest(() => expect(loginModalCtrl.open).toHaveBeenCalled())
           .digest(done);
         });

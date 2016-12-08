@@ -42,6 +42,10 @@ describe('Login', () => {
       expect(Ctrl.showButtons).toBe(true);
     });
 
+    it('should define a .loginCtrl property', () => {
+      expect(Ctrl.loginCtrl).toBe(Ctrl);
+    });
+
     describe('Loging in', () => {
       it('should define a .login() method', () => {
         expect(typeof Ctrl.login).toBe('function');
@@ -113,6 +117,13 @@ describe('Login', () => {
       compiler = CompileService;
       component = compiler.compile('<login></login>');
     }));
+
+    it('should bind login-ctrl property', (done) => {
+      component = compiler.compile('<login login-ctrl="loginCtrl"></login>')
+      .controller()
+      .digest((el, ctrl) => expect(component.scope.loginCtrl).toBe(ctrl))
+      .digest(done);
+    });
 
     it('should define an email input', (done) => {
       component.find('input[type=email]')
