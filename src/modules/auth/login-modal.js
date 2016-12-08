@@ -32,4 +32,19 @@ export default class LoginModal {
       'toast-success'
     );
   }
+
+  loginError(error) {
+    if (this._isLoginError(error.code)) {
+      Materialize.toast(
+        `Username or Password not valid. Please try again.`,
+        3000,
+        'toast-error'
+      );
+    }
+  }
+
+  _isLoginError(errorCode) {
+    return errorCode === 'INVALID_EMAIL' ||
+    errorCode === 'INVALID_PASSWORD';
+  }
 }

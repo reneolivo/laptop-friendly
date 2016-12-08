@@ -59,7 +59,7 @@ describe('LoginModal', () => {
       });
     });
 
-    describe('Login Success & Error', () => {
+    describe('Login Success', () => {
       beforeEach(() => ctrl.modal = modal);
 
       it('should define a .loginSuccess() method', () => {
@@ -83,6 +83,48 @@ describe('LoginModal', () => {
           3000,
           'toast-success'
         );
+      });
+    });
+
+
+    describe('Login Errors', () => {
+      let error ;
+
+      beforeEach(() => {
+        ctrl.modal = modal;
+
+        error = {
+          code: 'INVALID_EMAIL'
+        };
+
+        spyOn(Materialize, 'toast');
+      });
+
+      it('should define a .loginError() method', () => {
+        expect(typeof ctrl.loginError).toBe('function');
+      });
+
+      describe('Bad User name or password', () => {
+        it('should handle INVALID_EMAIL code', () => {
+          ctrl.loginError(error);
+
+          expect(Materialize.toast).toHaveBeenCalledWith(
+            'Username or Password not valid. Please try again.',
+            3000,
+            'toast-error'
+          );
+        });
+
+        it('should handle INVALID_PASSWORD code', () => {
+          error.code = 'INVALID_PASSWORD';
+          ctrl.loginError(error);
+
+          expect(Materialize.toast).toHaveBeenCalledWith(
+            'Username or Password not valid. Please try again.',
+            3000,
+            'toast-error'
+          );
+        });
       });
     });
   });
@@ -175,17 +217,29 @@ describe('LoginModal', () => {
         });
       });
 
-      it('should call .loginSuccess() when the login is successful', (done) => {
-        component.digest(() => spyOn(ctrl, 'loginSuccess'))
-        .digest(() => loginCtrl.onLoginSuccess({$user: user}))
-        .digest(() => expect(ctrl.loginSuccess).toHaveBeenCalledWith(user))
-        .digest(done);
+      describe('Success', () => {
+        it('should call .loginSuccess() when the login is successful', (done) => {
+          component.digest(() => spyOn(ctrl, 'loginSuccess'))
+          .digest(() => loginCtrl.onLoginSuccess({$user: user}))
+          .digest(() => expect(ctrl.loginSuccess).toHaveBeenCalledWith(user))
+          .digest(done);
+        });
+
+        it('should close the modal when login is successful', (done) => {
+          component.digest(() => loginCtrl.onLoginSuccess({$user: user}))
+          .digest(() => expect(ctrl.modal.close).toHaveBeenCalled())
+          .digest(done);
+        });
       });
 
-      it('should close the modal when login is successful', (done) => {
-        component.digest(() => loginCtrl.onLoginSuccess({$user: user}))
-        .digest(() => expect(ctrl.modal.close).toHaveBeenCalled())
-        .digest(done);
+      describe('Error', () => {
+        it('should call .loginError() when a login error occurs', (done) => {
+          let error = {code: 'INVALID_EMAIL'};
+          component.digest(() => spyOn(ctrl, 'loginError'))
+          .digest(() => loginCtrl.onLoginError({$error: error}))
+          .digest(() => expect(ctrl.loginError).toHaveBeenCalledWith(error))
+          .digest(done);
+        });
       });
     });
   });
