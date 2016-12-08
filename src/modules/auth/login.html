@@ -9,7 +9,7 @@
     <input ng-model="$ctrl.password" type="password" id="login-form-password" />
   </div>
 
-  <div class="button">
+  <div class="button" ng-if="$ctrl.showButtons != 'false'">
     <button class="login"
     ng-click="$ctrl.login();"
     >Login</button>

@@ -74,6 +74,12 @@ describe('LoginModal', () => {
       .digest(done);
     });
 
+    it('should not display the login form buttons', (done) => {
+      component.find('login div.button')
+      .digest((el, buttons) => expect(buttons.length).toBe(0))
+      .digest(done);
+    });
+
     describe('Opening and Closing', () => {
       let modal;
 

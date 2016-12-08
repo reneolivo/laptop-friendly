@@ -34,6 +34,10 @@ describe('Login', () => {
       expect(Ctrl.password).toBeDefined();
     });
 
+    it('should define a .showButtons property', () => {
+      expect(Ctrl.showButtons).toBe(true);
+    });
+
     describe('Loging in', () => {
       it('should define a .login() method', () => {
         expect(typeof Ctrl.login).toBe('function');
@@ -110,6 +114,22 @@ describe('Login', () => {
         })
         .click('button.login')
         .digest(() => expect(ctrl.login).toHaveBeenCalled())
+        .digest(done);
+      });
+    });
+
+    describe('Showing & Hiding buttons', () => {
+      it('should show the form buttons if .showButtons is true', (done) => {
+        compiler.compile('<login></login>')
+        .find('div.button')
+        .digest((el, buttons) => expect(buttons.length > 0).toBe(true))
+        .digest(done);
+      });
+
+      it('should hide the form buttons if .showButtons is false', (done) => {
+        compiler.compile('<login show-buttons="false"></login>')
+        .find('div.button')
+        .digest((el, buttons) => expect(buttons.length).toBe(0))
         .digest(done);
       });
     });
