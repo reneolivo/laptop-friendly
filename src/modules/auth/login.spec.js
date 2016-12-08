@@ -3,10 +3,14 @@ import Login from './login';
 describe('Login', () => {
   let AuthService;
   let scope;
+  let user;
 
   beforeEach(() => {
+    user = { id: '1234', name: 'Jon Snow' };
+
     AuthService = {
       login: jasmine.createSpy('login')
+      .and.returnValue(Promise.resolve(user))
     };
 
     scope = {
@@ -52,6 +56,47 @@ describe('Login', () => {
           scope.email,
           scope.password
         );
+      });
+    });
+
+    describe('Login success and failure', () => {
+      beforeEach(() => {
+        Ctrl.email = scope.email;
+        Ctrl.password = scope.password;
+
+        Ctrl.onLoginSuccess = jasmine.createSpy('onLoginSuccess');
+        Ctrl.onLoginError = jasmine.createSpy('onLoginError');
+      });
+
+      it('should call .onLoginSuccess() when login is successful', (done) => {
+        Ctrl.login();
+
+        setTimeout(() => {
+          expect(Ctrl.onLoginError).not.toHaveBeenCalled();
+          expect(Ctrl.onLoginSuccess).toHaveBeenCalledWith({
+            $user: user
+          });
+
+          done();
+        });
+      });
+
+      it('should call .onLoginError() when login fails', (done) => {
+        let error = {message: 'error'};
+
+        AuthService.login
+        .and.returnValue(Promise.reject(error));
+
+        Ctrl.login();
+
+        setTimeout(() => {
+          expect(Ctrl.onLoginSuccess).not.toHaveBeenCalled();
+          expect(Ctrl.onLoginError).toHaveBeenCalledWith({
+            $error: error
+          });
+
+          done();
+        });
       });
     });
   });
@@ -130,6 +175,49 @@ describe('Login', () => {
         compiler.compile('<login show-buttons="false"></login>')
         .find('div.button')
         .digest((el, buttons) => expect(buttons.length).toBe(0))
+        .digest(done);
+      });
+    });
+
+    describe('Login Success & Error', () => {
+      let events;
+
+      beforeEach(() => {
+        events = {
+          success: jasmine.createSpy('success'),
+          error: jasmine.createSpy('error')
+        };
+
+        component = compiler.compile(`
+          <login
+          on-login-success="success($user)"
+          on-login-error="error($error)"
+          ></login>
+        `, events);
+      });
+
+      it('should call event.success when login is successful', (done) => {
+        component.controller()
+        .digest((el, ctrl) => {
+          ctrl.email = scope.email;
+          ctrl.password = scope.password;
+          ctrl.login();
+        })
+        .digest(() => expect(events.success).toHaveBeenCalledWith(user))
+        .digest(done);
+      });
+
+      it('should call event.error when login fails', (done) => {
+        let error = {message: 'error'};
+        AuthService.login.and.returnValue(Promise.reject(error));
+
+        component.controller()
+        .digest((el, ctrl) => {
+          ctrl.email = scope.email;
+          ctrl.password = scope.password;
+          ctrl.login();
+        })
+        .digest(() => expect(events.error).toHaveBeenCalledWith(error))
         .digest(done);
       });
     });

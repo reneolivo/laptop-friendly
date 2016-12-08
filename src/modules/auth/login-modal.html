@@ -1,7 +1,10 @@
 <div>
   <modal modal-ctrl="$ctrl.modal">
     <modal-content>
-      <login show-buttons="false"></login>
+      <login
+      show-buttons="false"
+      on-login-success="$ctrl.loginSuccess($user)"
+      ></login>
     </modal-content>
   </modal>
 </div>

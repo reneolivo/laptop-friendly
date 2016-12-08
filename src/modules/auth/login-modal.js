@@ -22,4 +22,14 @@ export default class LoginModal {
   close() {
     this.modal.close();
   }
+
+  loginSuccess(user) {
+    this.close();
+
+    Materialize.toast(
+      `Welcome, ${user.name}`,
+      3000,
+      'toast-success'
+    );
+  }
 }

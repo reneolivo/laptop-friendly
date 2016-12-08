@@ -2,6 +2,20 @@ import LoginModal from './login-modal';
 import Modal from '../../widgets/modal';
 
 describe('LoginModal', () => {
+  let user;
+  let error;
+  let modal;
+
+  beforeEach(() => {
+    user = {uid: '1234', name: 'Jon Snow'};
+    error = {message: 'error'};
+
+    modal = {
+      open: jasmine.createSpy('open'),
+      close: jasmine.createSpy('close')
+    };
+  });
+
   describe('Controller', () => {
     let ctrl;
 
@@ -23,10 +37,7 @@ describe('LoginModal', () => {
 
     describe('Opening and closing', () => {
       beforeEach(() => {
-        ctrl.modal = {
-          open: jasmine.createSpy('open'),
-          close: jasmine.createSpy('close')
-        };
+        ctrl.modal = modal;
       });
 
       it('should define an .open() method', () => {
@@ -47,11 +58,48 @@ describe('LoginModal', () => {
         expect(ctrl.modal.close).toHaveBeenCalled();
       });
     });
+
+    describe('Login Success & Error', () => {
+      beforeEach(() => ctrl.modal = modal);
+
+      it('should define a .loginSuccess() method', () => {
+        expect(typeof ctrl.loginSuccess).toBe('function');
+      });
+
+      it('should call .close() when .loginSuccess() executes', () => {
+        spyOn(ctrl, 'close');
+        ctrl.loginSuccess(user);
+
+        expect(ctrl.close).toHaveBeenCalled();
+      });
+
+      it('should display a success modal when successful', () => {
+        spyOn(Materialize, 'toast');
+
+        ctrl.loginSuccess(user);
+
+        expect(Materialize.toast).toHaveBeenCalledWith(
+          `Welcome, ${user.name}`,
+          3000,
+          'toast-success'
+        );
+      });
+    });
   });
 
   describe('Component', () => {
     let component;
     let compiler;
+    let AuthService;
+
+    beforeEach(angular.mock.module(($provide) => {
+      AuthService = {
+        login: jasmine.createSpy('login')
+        .and.returnValue(Promise.resolve(user))
+      };
+
+      $provide.value('AuthService', AuthService);
+    }));
 
     beforeEach(inject((CompileService) => {
       compiler = CompileService;
@@ -108,6 +156,35 @@ describe('LoginModal', () => {
         .controller()
         .digest((el, ctrl) => ctrl.close())
         .digest(() => expect(modal.close).toHaveBeenCalled())
+        .digest(done);
+      });
+    });
+
+    describe('Login Success & Failure', () => {
+      let ctrl;
+      let loginCtrl;
+
+      beforeEach(() => {
+        component.controller()
+        .controller((el) => el.find('login'))
+        .digest((el, $ctrl) => loginCtrl = $ctrl)
+        .controller()
+        .digest((el, $ctrl) => {
+          ctrl = $ctrl;
+          ctrl.modal = modal;
+        });
+      });
+
+      it('should call .loginSuccess() when the login is successful', (done) => {
+        component.digest(() => spyOn(ctrl, 'loginSuccess'))
+        .digest(() => loginCtrl.onLoginSuccess({$user: user}))
+        .digest(() => expect(ctrl.loginSuccess).toHaveBeenCalledWith(user))
+        .digest(done);
+      });
+
+      it('should close the modal when login is successful', (done) => {
+        component.digest(() => loginCtrl.onLoginSuccess({$user: user}))
+        .digest(() => expect(ctrl.modal.close).toHaveBeenCalled())
         .digest(done);
       });
     });
