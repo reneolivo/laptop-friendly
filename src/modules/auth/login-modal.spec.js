@@ -72,77 +72,6 @@ describe('LoginModal', () => {
 
         expect(ctrl.close).toHaveBeenCalled();
       });
-
-      it('should display a success modal when successful', () => {
-        spyOn(Materialize, 'toast');
-
-        ctrl.loginSuccess(user);
-
-        expect(Materialize.toast).toHaveBeenCalledWith(
-          `Welcome, ${user.name}`,
-          3000,
-          'toast-success'
-        );
-      });
-    });
-
-
-    describe('Login Errors', () => {
-      let error ;
-
-      beforeEach(() => {
-        ctrl.modal = modal;
-
-        error = {
-          code: 'auth/user-not-found'
-        };
-
-        spyOn(Materialize, 'toast');
-      });
-
-      it('should define a .loginError() method', () => {
-        expect(typeof ctrl.loginError).toBe('function');
-      });
-
-      describe('Bad User name or password', () => {
-        it('should handle *auth/user-not-found* code', () => {
-          ctrl.loginError(error);
-          expectWrongUserNameOrPasswordToast();
-        });
-
-        it('should handle *auth/wrong-password* code', () => {
-          error.code = 'auth/wrong-password';
-          ctrl.loginError(error);
-
-          expectWrongUserNameOrPasswordToast();
-        });
-
-        it('should handle *auth/invalid-email* code', () => {
-          error.code = 'auth/invalid-email';
-          ctrl.loginError(error);
-
-          expectWrongUserNameOrPasswordToast();
-        });
-
-        it('should handle *auth/network-request-failed* code', () => {
-          error.code = 'auth/network-request-failed';
-          ctrl.loginError(error);
-
-          expectErrorToast('Network Disconnected.');
-        });
-
-        function expectWrongUserNameOrPasswordToast() {
-          expectErrorToast('Username or Password not valid. Please try again.');
-        }
-
-        function expectErrorToast(message) {
-          expect(Materialize.toast).toHaveBeenCalledWith(
-            message,
-            3000,
-            'toast-error'
-          );
-        }
-      });
     });
   });
 
@@ -285,15 +214,6 @@ describe('LoginModal', () => {
         });
       });
 
-      describe('Error', () => {
-        it('should call .loginError() when a login error occurs', (done) => {
-          let error = {code: 'auth/user-not-found'};
-          component.digest(() => spyOn(ctrl, 'loginError'))
-          .digest(() => loginCtrl.onLoginError({$error: error}))
-          .digest(() => expect(ctrl.loginError).toHaveBeenCalledWith(error))
-          .digest(done);
-        });
-      });
     });
   });
 });

@@ -64,7 +64,18 @@ describe('Login', () => {
     });
 
     describe('Login success and failure', () => {
+      let error;
+
       beforeEach(() => {
+        error = {
+          code: 'auth/user-not-found'
+        };
+
+        spyOn(Materialize, 'toast');
+
+        AuthService.login
+        .and.returnValue(Promise.resolve(user));
+
         Ctrl.email = scope.email;
         Ctrl.password = scope.password;
 
@@ -72,34 +83,92 @@ describe('Login', () => {
         Ctrl.onLoginError = jasmine.createSpy('onLoginError');
       });
 
-      it('should call .onLoginSuccess() when login is successful', (done) => {
-        Ctrl.login();
+      describe('Success', () => {
+        it('should call .onLoginSuccess() when login is successful', (done) => {
+          Ctrl.login();
 
-        setTimeout(() => {
-          expect(Ctrl.onLoginError).not.toHaveBeenCalled();
-          expect(Ctrl.onLoginSuccess).toHaveBeenCalledWith({
-            $user: user
+          setTimeout(() => {
+            expect(Ctrl.onLoginError).not.toHaveBeenCalled();
+            expect(Ctrl.onLoginSuccess).toHaveBeenCalledWith({
+              $user: user
+            });
+            done();
           });
+        });
 
-          done();
+        it('should display a success modal when successful', (done) => {
+          Ctrl.login();
+
+          setTimeout(() => {
+            expect(Materialize.toast).toHaveBeenCalledWith(
+              `Welcome, ${user.email}`,
+              3000,
+              'toast-success'
+            );
+            done();
+          });
         });
       });
 
-      it('should call .onLoginError() when login fails', (done) => {
-        let error = {message: 'error'};
+      describe('Failure', () => {
+        beforeEach(() => {
+          AuthService.login
+          .and.returnValue(Promise.reject(error));
+        });
 
-        AuthService.login
-        .and.returnValue(Promise.reject(error));
+        it('should call .onLoginError() when login fails', (done) => {
+          Ctrl.login();
 
-        Ctrl.login();
+          setTimeout(() => {
+            expect(Ctrl.onLoginSuccess).not.toHaveBeenCalled();
+            expect(Ctrl.onLoginError).toHaveBeenCalledWith({
+              $error: error
+            });
+            done();
+          });
+        });
 
-        setTimeout(() => {
-          expect(Ctrl.onLoginSuccess).not.toHaveBeenCalled();
-          expect(Ctrl.onLoginError).toHaveBeenCalledWith({
-            $error: error
+        describe('Login Errors', () => {
+          it('should handle *auth/user-not-found* code', (done) => {
+            Ctrl.login();
+            expectWrongUserNameOrPasswordToast(done);
           });
 
-          done();
+          it('should handle *auth/wrong-password* code', (done) => {
+            error.code = 'auth/wrong-password';
+            Ctrl.login();
+
+            expectWrongUserNameOrPasswordToast(done);
+          });
+
+          it('should handle *auth/invalid-email* code', (done) => {
+            error.code = 'auth/invalid-email';
+            Ctrl.login();
+
+            expectWrongUserNameOrPasswordToast(done);
+          });
+
+          it('should handle *auth/network-request-failed* code', (done) => {
+            error.code = 'auth/network-request-failed';
+            Ctrl.login();
+
+            expectErrorToast(done, 'Network Disconnected.');
+          });
+
+          function expectWrongUserNameOrPasswordToast(done) {
+            expectErrorToast(done, 'Username or Password not valid. Please try again.');
+          }
+
+          function expectErrorToast(done, message) {
+            setTimeout(() => {
+              expect(Materialize.toast).toHaveBeenCalledWith(
+                message,
+                3000,
+                'toast-error'
+              );
+              done();
+            });
+          }
         });
       });
     });
