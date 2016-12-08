@@ -94,7 +94,7 @@ describe('LoginModal', () => {
         ctrl.modal = modal;
 
         error = {
-          code: 'INVALID_EMAIL'
+          code: 'auth/user-not-found'
         };
 
         spyOn(Materialize, 'toast');
@@ -105,26 +105,43 @@ describe('LoginModal', () => {
       });
 
       describe('Bad User name or password', () => {
-        it('should handle INVALID_EMAIL code', () => {
+        it('should handle *auth/user-not-found* code', () => {
+          ctrl.loginError(error);
+          expectWrongUserNameOrPasswordToast();
+        });
+
+        it('should handle *auth/wrong-password* code', () => {
+          error.code = 'auth/wrong-password';
           ctrl.loginError(error);
 
+          expectWrongUserNameOrPasswordToast();
+        });
+
+        it('should handle *auth/invalid-email* code', () => {
+          error.code = 'auth/invalid-email';
+          ctrl.loginError(error);
+
+          expectWrongUserNameOrPasswordToast();
+        });
+
+        it('should handle *auth/network-request-failed* code', () => {
+          error.code = 'auth/network-request-failed';
+          ctrl.loginError(error);
+
+          expectErrorToast('Network Disconnected.');
+        });
+
+        function expectWrongUserNameOrPasswordToast() {
+          expectErrorToast('Username or Password not valid. Please try again.');
+        }
+
+        function expectErrorToast(message) {
           expect(Materialize.toast).toHaveBeenCalledWith(
-            'Username or Password not valid. Please try again.',
+            message,
             3000,
             'toast-error'
           );
-        });
-
-        it('should handle INVALID_PASSWORD code', () => {
-          error.code = 'INVALID_PASSWORD';
-          ctrl.loginError(error);
-
-          expect(Materialize.toast).toHaveBeenCalledWith(
-            'Username or Password not valid. Please try again.',
-            3000,
-            'toast-error'
-          );
-        });
+        }
       });
     });
   });
@@ -270,7 +287,7 @@ describe('LoginModal', () => {
 
       describe('Error', () => {
         it('should call .loginError() when a login error occurs', (done) => {
-          let error = {code: 'INVALID_EMAIL'};
+          let error = {code: 'auth/user-not-found'};
           component.digest(() => spyOn(ctrl, 'loginError'))
           .digest(() => loginCtrl.onLoginError({$error: error}))
           .digest(() => expect(ctrl.loginError).toHaveBeenCalledWith(error))

@@ -8,7 +8,7 @@ export default class AuthService {
   }
 
   login(email, password) {
-    this.fireAuth.$signInWithEmailAndPassword(email, password);
+    return this.fireAuth.$signInWithEmailAndPassword(email, password);
   }
 
   onUserChange(callback) {

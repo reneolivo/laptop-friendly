@@ -4,10 +4,14 @@ describe('AuthService', () => {
   let service;
   let fireAuth;
   let scope;
+  let promise;
 
   beforeEach(() => {
+    promise = Promise.resolve('ok');
+
     fireAuth = {
-      $signInWithEmailAndPassword: jasmine.createSpy('$signIn'),
+      $signInWithEmailAndPassword: jasmine.createSpy('$signIn')
+      .and.returnValue(promise),
       $onAuthStateChanged: jasmine.createSpy('$onAuth'),
       $getAuth: jasmine.createSpy('$getAuth')
     };
@@ -36,6 +40,11 @@ describe('AuthService', () => {
         scope.email,
         scope.password
       );
+    });
+
+    it('should return a $signIn promise', () => {
+      let result = service.login(scope.email, scope.password);
+      expect(result).toBe(promise);
     });
   });
 
