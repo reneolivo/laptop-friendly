@@ -10,9 +10,12 @@ import 'materialize-css/js/global';
 import 'materialize-css/js/animation';
 import 'materialize-css/js/modal';
 import 'materialize-css/js/toasts';
+import 'materialize-css/js/forms';
 
 
 import 'angular';
+import 'angular-aria';
+import 'angular-animate';
 import 'angular-ui-router';
 import 'angular-sanitize';
 import firebase from 'firebase';

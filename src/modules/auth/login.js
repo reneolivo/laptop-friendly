@@ -1,4 +1,6 @@
 import {Component, Inject} from '../../lib/decorators';
+import '../../widgets/forms/show-if-invalid';
+import '../../widgets/events/on-submit';
 
 @Component({
   template: require('./login.html'),
@@ -9,19 +11,24 @@ import {Component, Inject} from '../../lib/decorators';
     onLoginError: '&'
   }
 })
-@Inject('AuthService')
+@Inject('AuthService', '$scope')
 export default class Login {
   email = '';
   password = '';
   showButtons = true;
 
-  constructor(AuthService) {
+  constructor(AuthService, $scope) {
     this.loginCtrl = this;
+    this.$scope = $scope;
 
     this.authService = AuthService;
   }
 
   login() {
+    this.$scope.formCtrl.$setSubmitted();
+
+    if (this.$scope.formCtrl.$invalid) return;
+
     this.authService.login(
       this.email,
       this.password
@@ -64,7 +71,6 @@ export default class Login {
       this._displayNetworkError();
     }
   }
-
 
   _isCredentialError(errorCode) {
     return errorCode === 'auth/user-not-found' ||

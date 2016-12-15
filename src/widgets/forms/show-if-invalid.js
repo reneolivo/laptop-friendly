@@ -1,4 +1,4 @@
-import {Attribute} from '../../lib/decorators';
+import {Attribute, Inject} from '../../lib/decorators';
 
 @Attribute({
   require: '^form',
@@ -6,19 +6,29 @@ import {Attribute} from '../../lib/decorators';
     inputName: '@showIfInvalid'
   }
 })
+@Inject('$animate')
 export default class ShowIfInvalid {
-  link() {
-    this._hideElement();
+  constructor($animate) {
+    this.$animate = $animate;
+  }
 
+  link() {
+    this._setupElements();
+    this._hideElement();
     this._updateElementVisibilityWhenValidityChanges();
   }
 
+  _setupElements() {
+    this.parentElement = this.element.parent()[0];
+    this.previousElement = this.element.prev()[0];
+  }
+
   _hideElement() {
-    jQuery(this.element).hide();
+    this.$animate.leave(this.element);
   }
 
   _showElement() {
-    jQuery(this.element).show();
+    this.$animate.enter(this.element, this.parentElement, this.previousElement);
   }
 
   _updateElementVisibilityWhenValidityChanges() {

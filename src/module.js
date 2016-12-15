@@ -4,6 +4,8 @@ import './vendors';
 import './services/firebase';
 
 const Module =  angular.module('laptopFriendly', [
+  'ngAria',
+  'ngAnimate',
   'ui.router',
   'ngSanitize',
   'firebase'

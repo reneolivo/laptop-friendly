@@ -4,26 +4,39 @@ describe('Login', () => {
   let AuthService;
   let scope;
   let user;
+  let formScope;
+  let formCtrl;
+  let compiler;
 
-  beforeEach(() => {
+  beforeEach(angular.mock.module(($provide) => {
     user = { id: '1234', name: 'Jon Snow' };
+
+    scope = {
+      email: 'jsnow@example.com',
+      password: 'IKnowNothing'
+    };
 
     AuthService = {
       login: jasmine.createSpy('login')
       .and.returnValue(Promise.resolve(user))
     };
 
-    scope = {
-      email: 'jsnow@example.com',
-      password: 'IKnowNothing'
-    };
-  });
+    $provide.value('AuthService', AuthService);
+  }));
+
+  beforeEach(inject(($compile, $rootScope, CompileService) => {
+    compiler = CompileService;
+
+    formScope = $rootScope.$new();
+    $compile(`<form name="formCtrl"></form>`)(formScope);
+    formCtrl = formScope.formCtrl;
+  }));
 
   describe('Controller', () => {
     let Ctrl;
 
     beforeEach(() => {
-      Ctrl = new Login(AuthService);
+      Ctrl = new Login(AuthService, formScope);
     });
 
     it('should be defined', () => {
@@ -60,6 +73,26 @@ describe('Login', () => {
           scope.email,
           scope.password
         );
+      });
+    });
+
+    describe('Validation', () => {
+      it('should not try to login if the form is not valid', () => {
+        formCtrl.$setValidity('required', false);
+        Ctrl.login();
+        expect(AuthService.login).not.toHaveBeenCalled();
+      });
+
+      it('should try to login if the form is valid', () => {
+        formCtrl.$setValidity('required', true);
+        Ctrl.login();
+        expect(AuthService.login).toHaveBeenCalled();
+      });
+
+      it('should mark the form as submitted when trying to login', () => {
+        expect(formCtrl.$submitted).toBe(false);
+        Ctrl.login();
+        expect(formCtrl.$submitted).toBe(true);
       });
     });
 
@@ -176,16 +209,19 @@ describe('Login', () => {
 
   describe('Component', () => {
     let component;
-    let compiler;
 
-    beforeEach(angular.mock.module(($provide) => {
-      $provide.value('AuthService', AuthService);
-    }));
-
-    beforeEach(inject((CompileService) => {
-      compiler = CompileService;
+    beforeEach(() => {
       component = compiler.compile('<login></login>');
-    }));
+    });
+
+    function sendKeys(inputName, value) {
+      return component.digest((el) => {
+        return el.find(inputName)
+        .val(value)
+        .trigger('input')
+        .trigger('blur');
+      });
+    }
 
     it('should bind login-ctrl property', (done) => {
       component = compiler.compile('<login login-ctrl="loginCtrl"></login>')
@@ -237,7 +273,7 @@ describe('Login', () => {
           ctrl = $ctrl;
           spyOn(ctrl, 'login');
         })
-        .click('button.login')
+        .digest((el) => el.find('form').trigger('submit'))
         .digest(() => expect(ctrl.login).toHaveBeenCalled())
         .digest(done);
       });
@@ -277,12 +313,10 @@ describe('Login', () => {
       });
 
       it('should call event.success when login is successful', (done) => {
-        component.controller()
-        .digest((el, ctrl) => {
-          ctrl.email = scope.email;
-          ctrl.password = scope.password;
-          ctrl.login();
-        })
+        sendKeys('[name=email]', scope.email);
+        sendKeys('[name=password]', scope.password);
+
+        component.click('button.login')
         .digest(() => expect(events.success).toHaveBeenCalledWith(user))
         .digest(done);
       });
@@ -291,14 +325,71 @@ describe('Login', () => {
         let error = {message: 'error'};
         AuthService.login.and.returnValue(Promise.reject(error));
 
-        component.controller()
-        .digest((el, ctrl) => {
-          ctrl.email = scope.email;
-          ctrl.password = scope.password;
-          ctrl.login();
-        })
+        sendKeys('[name=email]', scope.email);
+        sendKeys('[name=password]', scope.password);
+
+        component.click('button.login')
         .digest(() => expect(events.error).toHaveBeenCalledWith(error))
         .digest(done);
+      });
+    });
+
+    describe('Validation', () => {
+      let emailErrorElement = '.error.email-error';
+      let passwordErrorElement = '.error.password-error';
+      let emailErrorMessage = 'Valid email required.';
+      let passwordErrorMessage = 'Valid password required.';
+
+      function expectError(errorElementPath, errorMessage) {
+        let error;
+
+        return component.digest((el) => el.find(errorElementPath))
+        .digest((el, errorElement) => error = errorElement)
+        .digest((el) => expect(error.length).toBe(1))
+        .digest((el) => expect(error.text()).toBe(errorMessage));
+      }
+
+      function dontExpectError(errorElementPath) {
+        return component.digest((el) => el.find(errorElementPath))
+        .digest((el, error) => expect(error.length).toBe(0));
+      }
+
+      describe('Showing validation errors', () => {
+        it('should show an error message after entering an invalid email', (done) => {
+          sendKeys('[name=email]', 'info@');
+          expectError(emailErrorElement, emailErrorMessage);
+          component.digest(done);
+        });
+
+        it('should show an error after leaving the email field empty', (done) => {
+          sendKeys('[name=email]', '');
+          expectError(emailErrorElement, emailErrorMessage);
+          component.digest(done);
+        });
+
+        it('should show an error after leaving the password field empty', (done) => {
+          sendKeys('[name=password]', '');
+          expectError(passwordErrorElement, passwordErrorMessage);
+          component.digest(done);
+        });
+
+        it('should show several error messages after trying to submit an empty form', (done) => {
+          component.digest((el) => el.find('form').trigger('submit'));
+          expectError(emailErrorElement, emailErrorMessage);
+          expectError(passwordErrorElement, passwordErrorMessage);
+          component.digest(done);
+        });
+      });
+
+      describe('Hiding validation errors', () => {
+        it('should not show an error message if the email is valid', (done) => {
+          sendKeys('[name=email]', 'info@example.com');
+          dontExpectError(emailErrorElement);
+          component.digest(done);
+        });
+
+        it('should not show an error message if the password is valid');
+        it('should not show an error message when submitting a valid form');
       });
     });
 

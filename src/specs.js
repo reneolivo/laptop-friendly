@@ -12,5 +12,7 @@ angular.module('laptopFriendly').config(($sceDelegateProvider) => {
   ]);
 });
 
+afterEach(() => jQuery('body').empty());
+
 const tests = require.context(".", true, /\.spec\.js$/);
 tests.keys().forEach(tests);

@@ -6,7 +6,7 @@ describe('Show If Invalid attribute', () => {
   let scope;
   let form;
 
-  beforeEach(inject(($rootScope, $compile) => {
+  beforeEach(inject(($rootScope, $compile, $animate) => {
     initLinkAttributes();
     initDirective();
 
@@ -29,7 +29,7 @@ describe('Show If Invalid attribute', () => {
     function setController() {
       let formScope = $rootScope.$new();
 
-      var a = $compile(`
+      $compile(`
         <form name="login">
           <input name="username" ng-model="username" required />
         </form>
@@ -39,12 +39,20 @@ describe('Show If Invalid attribute', () => {
     }
 
     function initDirective() {
-      ctrl = new ShowIfInvalid();
+      ctrl = new ShowIfInvalid($animate);
       ctrl.scope = scope;
       ctrl.element = element;
       ctrl.controller = form;
     }
   }));
+
+  function expectElementToBeHidden() {
+    expect(jQuery('body .error').length).toBe(0);
+  }
+
+  function expectElementToBeVisible() {
+    expect(jQuery('body .error').length).toBe(1);
+  }
 
   it('should be defined', () => {
     expect(ctrl).toBeDefined();
@@ -58,7 +66,7 @@ describe('Show If Invalid attribute', () => {
     beforeEach(() => ctrl.link());
 
     it('should hide the element at first', () => {
-      expect(element.is(':hidden')).toBe(true);
+      expectElementToBeHidden();
     });
   });
 
@@ -71,7 +79,7 @@ describe('Show If Invalid attribute', () => {
 
       scope.$digest();
 
-      expect(element.is(':hidden')).toBe(false);
+      expectElementToBeVisible();
     });
 
     it('should be hidden when the form input has erros but has not been touched', () => {
@@ -80,7 +88,7 @@ describe('Show If Invalid attribute', () => {
 
       scope.$digest();
 
-      expect(element.is(':hidden')).toBe(true);
+      expectElementToBeHidden();
     });
 
     it('should be hidden when the form input has no errors', () => {
@@ -89,7 +97,7 @@ describe('Show If Invalid attribute', () => {
 
       scope.$digest();
 
-      expect(element.is(':hidden')).toBe(true);
+      expectElementToBeHidden();
     });
 
     it('should be hidden when the form input was invalid, but then it was fixed', () => {
@@ -98,12 +106,12 @@ describe('Show If Invalid attribute', () => {
 
       scope.$digest();
 
-      expect(element.is(':hidden')).toBe(false);
+      expectElementToBeVisible();
 
       form.username.$setValidity('required', true);
       scope.$digest();
 
-      expect(element.is(':hidden')).toBe(true);
+      expectElementToBeHidden();
     });
 
     it('should be shown when the form input has errors and is untouched, but the form has been submitted', () => {
@@ -113,7 +121,7 @@ describe('Show If Invalid attribute', () => {
 
       scope.$digest();
 
-      expect(element.is(':hidden')).toBe(false);
+      expectElementToBeVisible();
     });
 
     it('should be hidden when the form input has errors and is untouched, but the form has not been submitted', () => {
@@ -123,7 +131,7 @@ describe('Show If Invalid attribute', () => {
 
       scope.$digest();
 
-      expect(element.is(':hidden')).toBe(true);
+      expectElementToBeHidden();
     });
   });
 });
