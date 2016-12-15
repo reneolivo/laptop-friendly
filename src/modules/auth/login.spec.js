@@ -388,8 +388,20 @@ describe('Login', () => {
           component.digest(done);
         });
 
-        it('should not show an error message if the password is valid');
-        it('should not show an error message when submitting a valid form');
+        it('should not show an error message if the password is valid', (done) => {
+          sendKeys('[name=password]', '12345678');
+          dontExpectError(passwordErrorElement);
+          component.digest(done);
+        });
+
+        it('should not show an error message when submitting a valid form', (done) => {
+          sendKeys('[name=email]', 'info@example.com');
+          sendKeys('[name=password]', '12345678');
+          component.digest((el) => el.find('form').trigger('submit'));
+          dontExpectError(emailErrorElement);
+          dontExpectError(passwordErrorElement);
+          component.digest(done);
+        });
       });
     });
 
