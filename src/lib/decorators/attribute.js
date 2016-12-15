@@ -1,15 +1,22 @@
 import Module from '../../module';
+import Helpers from '../helpers';
 
-export default function Attribute(params) {
+export default function Attribute(params = {}) {
   return function(target) {
     if (!target.$inject) target.$inject = [];
 
     function Directive(...dependencies) {
-      const instance = new target(...dependencies);
-
       params.restrict = 'A';
-      params.link = (scope, element, attributes, controllers) => {
-        instance.link(scope, element, attributes, controllers);
+
+      params.link = (scope, element, attributes, controller) => {
+        const instance = new target(...dependencies);
+
+        instance.scope = scope;
+        instance.element = element;
+        instance.attributes = attributes;
+        instance.controller = controller;
+
+        instance.link();
       };
 
       return params;
@@ -17,6 +24,7 @@ export default function Attribute(params) {
 
     Directive.$inject = target.$inject;
 
-    Module.directive(target.name, Directive);
+    let directiveName = Helpers.string.firstLetterToLowerCase(target.name);
+    Module.directive(directiveName, Directive);
   }
 }

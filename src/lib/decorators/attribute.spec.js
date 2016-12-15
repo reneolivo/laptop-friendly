@@ -13,6 +13,25 @@ describe('Attribute', () => {
     let dependency1;
     let dependency2;
     let linkSpy;
+    let linkParams;
+
+    class GlobalAttribute {
+      constructor($dependency1, $dependency2) {
+        dependency1 = $dependency1;
+        dependency2 = $dependency2;
+      }
+
+      link(...args) {
+        linkSpy(...args);
+
+        linkParams = {
+          scope: this.scope,
+          element: this.element,
+          attributes: this.attributes,
+          controller: this.controller
+        };
+      }
+    }
 
     beforeEach(() => {
       spyOn(Module, 'directive').and.callFake((name, paramsFn) => {
@@ -27,21 +46,15 @@ describe('Attribute', () => {
       };
 
       @Attribute(params)
-      class MyAttribute {
-        constructor($dependency1, $dependency2) {
-          dependency1 = $dependency1;
-          dependency2 = $dependency2;
-        }
-
-        link(...args) {
-          linkSpy(...args);
-        }
-      }
+      class MyAttribute extends GlobalAttribute {}
     });
 
     it('should call Module.directive', () => {
       expect(Module.directive).toHaveBeenCalled();
-      expect(directiveName).toBe('MyAttribute');
+    });
+
+    it('should name the directive myAttribute (lower case M)', () => {
+      expect(directiveName).toBe('myAttribute');
     });
 
     it('should return a directive function', () => {
@@ -79,10 +92,10 @@ describe('Attribute', () => {
       });
 
       it('should pass the dependencies to MyAttribute constructor', () => {
-        let a = {};
-        let b = {};
+        let a = 'depA';
+        let b = 'depB';
 
-        directiveParamsFn(a, b);
+        directiveParamsFn(a, b).link();
 
         expect(dependency1).toBe(a);
         expect(dependency2).toBe(b);
@@ -103,20 +116,26 @@ describe('Attribute', () => {
       });
 
       describe('Linking function', () => {
-        let a = {};
-        let b = {};
-        let c = {};
-        let d = {};
-        let e = {};
+        let a = 'scope';
+        let b = 'element';
+        let c = 'attributes';
+        let d = 'controller';
 
         it('should call MyAttribute.link', () => {
           directiveParams.link(a, b, c, d);
-          expect(linkSpy).toHaveBeenCalledWith(a, b, c, d);
+          expect(linkSpy).toHaveBeenCalled();
         });
 
-        it('should only call MyAttribute.link with the appropiate params', () => {
-          directiveParams.link(a, b, c, d, e);
-          expect(linkSpy).toHaveBeenCalledWith(a, b, c, d);
+        it('should only call MyAttribute.link with no params', () => {
+          directiveParams.link(a, b, c, d);
+          expect(linkSpy).toHaveBeenCalledWith();
+        });
+
+        it('should pass the linking params as properties', () => {
+          expect(linkParams.scope).toBe(a);
+          expect(linkParams.element).toBe(b);
+          expect(linkParams.attributes).toBe(c);
+          expect(linkParams.controller).toBe(d);
         });
       });
     });
