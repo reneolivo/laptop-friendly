@@ -8,7 +8,8 @@ const Module =  angular.module('laptopFriendly', [
   'ngAnimate',
   'ui.router',
   'ngSanitize',
-  'firebase'
+  'firebase',
+  'ngTagsInput',
 ]);
 
 export default Module;

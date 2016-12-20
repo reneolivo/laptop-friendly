@@ -1,0 +1,31 @@
+<form name="formCtrl" id="place-form" on-submit="$ctrl.submit()">
+  <div class="input">
+    <label for="place-form-name">Name</label>
+    <input name="name" id="place-form-name" ng-model="$ctrl.place.name" />
+  </div>
+
+  <div class="input">
+    <label for="place-form-address">Address</label>
+    <input name="address" id="place-form-address" ng-model="$ctrl.place.address" />
+  </div>
+
+  <div class="input">
+    <label for="place-form-description">Description</label>
+    <textarea name="description" id="place-form-description" ng-model="$ctrl.place.description"></textarea>
+  </div>
+
+  <strong>Facilities:</strong>
+  <span>{{ $ctrl.place | json }}</span>
+  <ul class="facilities">
+    <li ng-repeat="facility in $ctrl.place.facilities track by $index">
+      <input name="facility[]" ng-model="facility" />
+    </li>
+    <li>
+      <input name="facility[]" ng-model="$ctrl.newFacility" ng-blur="$ctrl.addFacility()" />
+    </li>
+  </ul>
+
+  <div class="buttons">
+    <button class="save">Save</button>
+  </div>
+</form>

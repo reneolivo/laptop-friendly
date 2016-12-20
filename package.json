@@ -69,6 +69,7 @@
     "font-awesome": "^4.7.0",
     "geofire": "^4.1.2",
     "jquery": "^3.1.1",
-    "jquery-easing": "0.0.1"
+    "jquery-easing": "0.0.1",
+    "ng-tags-input": "^3.1.1"
   }
 }

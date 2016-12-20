@@ -53,6 +53,18 @@ export class DigestQueue {
     return this;
   }
 
+  sendKeys(inputPath, value) {
+    this.find(inputPath);
+
+    this.digest((el, input) => {
+      input.val(value);
+      input.trigger('input');
+      input.trigger('blur');
+    });
+
+    return this;
+  }
+
   _getRootController() {
     this.digest((el) => {
       return angular.element(el).isolateScope().$ctrl;
