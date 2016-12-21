@@ -14,16 +14,12 @@
     <textarea name="description" id="place-form-description" ng-model="$ctrl.place.description"></textarea>
   </div>
 
-  <strong>Facilities:</strong>
-  <span>{{ $ctrl.place | json }}</span>
-  <ul class="facilities">
-    <li ng-repeat="facility in $ctrl.place.facilities track by $index">
-      <input name="facility[]" ng-model="facility" />
-    </li>
-    <li>
-      <input name="facility[]" ng-model="$ctrl.newFacility" ng-blur="$ctrl.addFacility()" />
-    </li>
-  </ul>
+  <div class="input">
+    <label for="place-form-facilities">Facilities</label>
+    <tags-input ng-model="$ctrl.place.facilities" id="place-form-facilities" add-from-autocomplete-only="true">
+      <auto-complete source="$ctrl.facilities()"></auto-complete>
+    </tags-input>
+  </div>
 
   <div class="buttons">
     <button class="save">Save</button>

@@ -1,8 +1,9 @@
 import {Component, State} from '../../lib/decorators';
-import '../places/places';
-import '../places/place-details';
 import '../auth/login-modal';
 import '../auth/user';
+import '../places/places';
+import '../places/place-details';
+import '../places/place-form';
 
 @Component({
   template: require('./home.html')

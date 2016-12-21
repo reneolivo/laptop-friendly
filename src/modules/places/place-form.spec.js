@@ -1,7 +1,8 @@
 import PlaceForm from './place-form';
 import Place from './place.dto';
+import FacilityIcons from '../../config/facility-icons';
 
-fdescribe('PlaceForm', () => {
+describe('PlaceForm', () => {
   it('should be defined', () => {
     expect(typeof PlaceForm).toBe('function');
   });
@@ -33,34 +34,25 @@ fdescribe('PlaceForm', () => {
       .expect(ctrl.place instanceof Place).toBe(true);
     });
 
-    describe('adding a new facility', () => {
-      it('should define a .newFacility property', () => {
-        expect(ctrl.newFacility).toBe('');
+    describe('facilities list', () => {
+      it('should define a .facilities() method', () => {
+        expect(typeof ctrl.facilities).toBe('function');
       });
 
-      it('should define a .addFacility() method', () => {
-        expect(typeof ctrl.addFacility).toBe('function');
+      it('should return a promise', () => {
+        let result = ctrl.facilities();
+        expect(result instanceof Promise).toBe(true);
       });
 
-      it('should add a new facility', () => {
-        let facilityName = 'Open Wifi';
-        expect(ctrl.place.facilities.length).toBe(0);
-        ctrl.newFacility = facilityName;
-        ctrl.addFacility();
-        expect(ctrl.place.facilities.length).toBe(1);
-        expect(ctrl.place.facilities[0]).toBe(facilityName);
-      });
+      it('should return an array of facilities', (done) => {
+        ctrl.facilities()
+        .then((results) => {
+          let facilities = Object.keys(FacilityIcons);
 
-      it('should clear the .newFacility property after adding a new facility', () => {
-        ctrl.newFacility = 'Open Wifi';
-        ctrl.addFacility();
-        expect(ctrl.newFacility).toBe('');
-      });
+          expect(results).toEqual(facilities);
+        });
 
-      it('should not add a new facility if .newFacility is empty', () => {
-        ctrl.newFacility = '';
-        ctrl.addFacility();
-        expect(ctrl.place.facilities.length).toBe(0);
+        setTimeout(() => done());
       });
     });
 
@@ -155,44 +147,15 @@ fdescribe('PlaceForm', () => {
       });
 
       it('should bind the place.facilities property', (done) => {
-        component.find('ul.facilities input[name="facility[]"]')
-        .digest((el, inputs) => {
-          since('There should be at least 3 facility inputs')
-          .expect(inputs.length >= 3).toBe(true);
-        });
-
-        component.find('[name="facility[]"]:eq(0)')
-        .digest((el, input) => expect(input.val()).toBe(ctrl.place.facilities[0]));
-        component.find('[name="facility[]"]:eq(1)')
-        .digest((el, input) => expect(input.val()).toBe(ctrl.place.facilities[1]));
-        component.find('[name="facility[]"]:eq(2)')
-        .digest((el, input) => expect(input.val()).toBe(ctrl.place.facilities[2]));
-
-        component.digest(done);
+        component.find('tags-input[ng-model="$ctrl.place.facilities"]')
+        .digest((el, input) => expect(input.length).toBe(1))
+        .digest(done);
       });
 
-      it('should add an extra empty input at the end', (done) => {
-        component.find('[name="facility[]"]')
-        .digest((el, input) => expect(input.length).toBe(4))
-
-        component.find('[name="facility[]"]:eq(3)')
-        .digest((el, input) => expect(input.val()).toBe(''));
-
-        component.digest(done);
-      });
-
-      it('should add a new facility after entering a value to the last input', (done) => {
-        let newFacility = 'Opens Late';
-
-        component.sendKeys('[name="facility[]"]:last', newFacility);
-
-        component.find('[name="facility[]"]')
-        .digest((el, input) => expect(input.length).toBe(5));
-
-        component.find('[name="facility[]"]:eq(3)')
-        .digest((el, input) => expect(input.val()).toBe(newFacility));
-
-        component.digest(done);
+      it('should source the the tags-input using the facilities list', (done) => {
+        component.find('tags-input auto-complete[source="$ctrl.facilities()"]')
+        .digest((el, source) => expect(source.length).toBe(1))
+        .digest(done);
       });
     });
 

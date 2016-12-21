@@ -1,5 +1,7 @@
 import {Component, Inject} from '../../lib/decorators';
 import Place from './place.dto';
+import FacilityIcons from '../../config/facility-icons';
+import '../../widgets/events/on-submit';
 
 @Component({
   template: require('./place-form.html')
@@ -14,11 +16,9 @@ export default class PlaceForm {
     this.scope = $scope;
   }
 
-  addFacility() {
-    if (this.newFacility == false) return;
-
-    this.place.facilities.push(this.newFacility);
-    this.newFacility = '';
+  facilities() {
+    let values = Object.keys(FacilityIcons);
+    return Promise.resolve(values);
   }
 
   submit() {

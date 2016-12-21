@@ -5,6 +5,7 @@ describe('Places Service', () => {
   let Ctrl;
   let spy;
   let $firebaseArray;
+  let $firebase;
 
   const listings = [
     {
@@ -20,7 +21,7 @@ describe('Places Service', () => {
     $firebaseArray = jasmine.createSpy('$firebaseArray')
     .and.returnValue({array: listings});
 
-    Ctrl = new Places($firebaseArray);
+    Ctrl = new Places($firebaseArray, $firebase);
   });
 
   describe('init', () => {
@@ -39,6 +40,32 @@ describe('Places Service', () => {
 
       expect(result).toEqual({array: listings});
       expect($firebaseArray).toHaveBeenCalledWith(listings);
+    });
+  });
+
+  describe('Create', () => {
+    let place;
+    let promise;
+
+    beforeEach(() => {
+      place = { name: 'A fun Cafe' };
+      promise = Promise.resolve(place);
+      spyOn(listings, 'push').and.returnValue(promise);
+    });
+
+    it('should define a .create() method', () => {
+      expect(typeof Ctrl.create).toBe('function');
+    });
+
+    it('should create a new place on firebase', () => {
+      let place = {name: 'Some Place'};
+      Ctrl.create(place);
+      expect(listings.push).toHaveBeenCalledWith(place);
+    });
+
+    it('should return a promise', () => {
+      let result = Ctrl.create(place);
+      expect(result).toBe(promise);
     });
   });
 });

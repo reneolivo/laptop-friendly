@@ -21,4 +21,4 @@ import 'angular-sanitize';
 import firebase from 'firebase';
 window.firebase = firebase;
 import 'angularfire';
-import 'ng-tags-input';
+import 'ng-tags-input/build/ng-tags-input';

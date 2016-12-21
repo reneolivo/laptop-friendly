@@ -60,6 +60,21 @@ export class DigestQueue {
       input.val(value);
       input.trigger('input');
       input.trigger('blur');
+      return input;
+    });
+
+    return this;
+  }
+
+  sendEnterKey(elementPath) {
+    this.find(elementPath);
+
+    this.digest((el, childElement) => {
+      let event = new jQuery.Event('keydown');
+      event.which = 13;
+      event.keyCode = 13;
+      childElement.trigger(event);
+      return childElement;
     });
 
     return this;
