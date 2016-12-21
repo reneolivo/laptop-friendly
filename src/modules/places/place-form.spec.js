@@ -11,15 +11,23 @@ describe('PlaceForm', () => {
     let ctrl;
     let PlaceService;
     let formCtrl;
+    let toast;
 
     beforeEach(inject(($rootScope, $compile) => {
       PlaceService = {
           create: jasmine.createSpy('create')
+          .and.callFake((ref) => Promise.resolve(ref))
+      };
+      toast = {
+        success: jasmine.createSpy('success'),
+        error: jasmine.createSpy('error')
       };
 
       let $scope = createScopeAndFormCtrl($rootScope, $compile);
 
-      ctrl = new PlaceForm(PlaceService, $scope);
+      ctrl = new PlaceForm(PlaceService, $scope, toast);
+
+      ctrl.onSubmitSuccess = jasmine.createSpy('onSubmitSuccess');
     }));
 
     function createScopeAndFormCtrl($rootScope, $compile) {
@@ -71,6 +79,43 @@ describe('PlaceForm', () => {
         formCtrl.$setValidity('required', false);
         ctrl.submit();
         expect(PlaceService.create).not.toHaveBeenCalled();
+      });
+
+      it('should send a toast.success message if the place was created successfuly', (done) => {
+        ctrl.submit();
+        setTimeout(() => {
+          expect(toast.success).toHaveBeenCalledWith(`Place created successfuly`);
+          done();
+        });
+      });
+
+      it('should not call toast.success if the place was not created successfuly', (done) => {
+        PlaceService.create.and.returnValue(Promise.reject());
+        ctrl.submit();
+        setTimeout(() => {
+          expect(toast.success).not.toHaveBeenCalled();
+          done();
+        });
+      });
+
+      it('should call .onSubmitSuccess event on success', (done) => {
+        ctrl.submit();
+        setTimeout(() => {
+          expect(ctrl.onSubmitSuccess).toHaveBeenCalledWith({
+            $place: ctrl.place
+          });
+          done();
+        });
+      });
+
+      it('should not call .onSubmitSuccess event on failure', (done) => {
+        PlaceService.create.and.returnValue(Promise.reject());
+
+        ctrl.submit();
+        setTimeout(() => {
+          expect(ctrl.onSubmitSuccess).not.toHaveBeenCalled();
+          done();
+        });
       });
     });
   });

@@ -4,16 +4,20 @@ import FacilityIcons from '../../config/facility-icons';
 import '../../widgets/events/on-submit';
 
 @Component({
-  template: require('./place-form.html')
+  template: require('./place-form.html'),
+  bindings: {
+    onSubmitSuccess: '&'
+  }
 })
 @Inject('PlacesService', '$scope')
 export default class PlaceForm {
   place = new Place();
   newFacility = '';
 
-  constructor(PlacesService, $scope) {
+  constructor(PlacesService, $scope, toast) {
     this.placesService = PlacesService;
     this.scope = $scope;
+    this.toast = toast;
   }
 
   facilities() {
@@ -24,6 +28,10 @@ export default class PlaceForm {
   submit() {
     if (this.scope.formCtrl.$invalid) return;
 
-    this.placesService.create(this.place);
+    this.placesService.create(this.place).then((place) => {
+      this.toast.success('Place created successfuly');
+
+      this.onSubmitSuccess({$place: place});
+    });
   }
 }
