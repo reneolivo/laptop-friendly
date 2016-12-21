@@ -225,8 +225,7 @@ describe('Login', () => {
 
     it('should bind login-ctrl property', (done) => {
       component = compiler.compile('<login login-ctrl="loginCtrl"></login>')
-      .controller()
-      .digest((el, ctrl) => expect(component.scope.loginCtrl).toBe(ctrl))
+      .digest((el) => expect(component.scope.loginCtrl).toBeDefined())
       .digest(done);
     });
 

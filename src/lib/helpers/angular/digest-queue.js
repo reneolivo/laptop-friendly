@@ -36,8 +36,15 @@ export class DigestQueue {
     return this;
   }
 
-  find(elementName) {
+  find(elementName, callback = false) {
     this.digest((el) => el.find(elementName));
+
+    if (typeof callback === 'function') {
+      this.digest((el, childElement) => {
+        callback(childElement);
+        return childElement;
+      });
+    }
 
     return this;
   }
@@ -82,7 +89,7 @@ export class DigestQueue {
 
   _getRootController() {
     this.digest((el) => {
-      return angular.element(el).isolateScope().$ctrl;
+      return this.scope.$$childTail.$ctrl;
     });
   }
 

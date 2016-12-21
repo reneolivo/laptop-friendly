@@ -145,6 +145,25 @@ describe('PlaceForm', () => {
       .digest(() => expect(ctrl.place[ placeField ]).toBe(value));
     }
 
+    it('should bind itself to the parent scope if a controller property is provided', (done) => {
+      component = compiler.compile(`<place-form controller="myPlaceForm"></place-form>`)
+      .digest((el) => {
+        since('*scope.myPlaceForm* should equal *PlaceForm*')
+        .expect(component.scope.myPlaceForm).toBeDefined();
+        done();
+      });
+    });
+
+    it('should not bind itself to the parent scope if a controller property is not provided', (done) => {
+      component = compiler.compile(`<place-form controller=""></place-form>`)
+      .controller()
+      .digest((el, ctrl) => {
+        since('*scope.myPlaceForm* should not be defined')
+        .expect(component.scope.myPlaceForm).not.toBeDefined();
+        done();
+      });
+    });
+
     it('should bind the .place.name property', (done) => {
       expectInputToBeDefined('input[name=name]');
       expectInputAndPlaceFieldToHaveSameValue(

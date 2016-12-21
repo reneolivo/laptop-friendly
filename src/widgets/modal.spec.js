@@ -68,8 +68,7 @@ describe('Modal', () => {
     }));
 
     it('should expose modalCtrl', (done) => {
-      component.controller()
-      .digest((el, ctrl) => expect(component.scope.myModal).toBe(ctrl))
+      component.digest(() => expect(component.scope.myModal).toBeDefined())
       .digest(done);
     });
 

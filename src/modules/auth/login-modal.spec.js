@@ -99,8 +99,7 @@ describe('LoginModal', () => {
     }));
 
     it('should expose the controller', (done) => {
-      component.controller()
-      .digest((el, ctrl) => expect(component.scope.myLoginModal).toBe(ctrl))
+      component.digest((el) => expect(component.scope.myLoginModal).toBeDefined())
       .digest(done);
     });
 

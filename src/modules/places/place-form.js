@@ -2,14 +2,16 @@ import {Component, Inject} from '../../lib/decorators';
 import Place from './place.dto';
 import FacilityIcons from '../../config/facility-icons';
 import '../../widgets/events/on-submit';
+import '../../services/toast';
 
 @Component({
   template: require('./place-form.html'),
   bindings: {
+    controller: '=?',
     onSubmitSuccess: '&'
   }
 })
-@Inject('PlacesService', '$scope')
+@Inject('PlacesService', '$scope', 'Toast')
 export default class PlaceForm {
   place = new Place();
   newFacility = '';
@@ -18,6 +20,12 @@ export default class PlaceForm {
     this.placesService = PlacesService;
     this.scope = $scope;
     this.toast = toast;
+
+    this._attachToParentScope();
+  }
+
+  _attachToParentScope() {
+    this.controller = this;
   }
 
   facilities() {

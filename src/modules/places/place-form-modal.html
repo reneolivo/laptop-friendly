@@ -1,0 +1,18 @@
+<modal modal-ctrl="$ctrl.modal">
+  <modal-content>
+    <place-form
+    controller="$ctrl.placeForm"
+    on-submit-success="$ctrl.close()"
+    ></place-form>
+  </modal-content>
+
+  <modal-footer>
+    <button class="close" ng-click="$ctrl.close()">
+      Close
+    </button>
+
+    <button class="save" ng-click="$ctrl.submit()">
+      Submit
+    </button>
+  </modal-footer>
+</modal>
