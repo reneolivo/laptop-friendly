@@ -8,13 +8,14 @@ import '../../services/toast';
   template: require('./place-form.html'),
   bindings: {
     controller: '=?',
+    showButtons: '@',
     onSubmitSuccess: '&'
   }
 })
 @Inject('PlacesService', '$scope', 'Toast')
 export default class PlaceForm {
   place = new Place();
-  newFacility = '';
+  showButtons = true;
 
   constructor(PlacesService, $scope, toast) {
     this.placesService = PlacesService;

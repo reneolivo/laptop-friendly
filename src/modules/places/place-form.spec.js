@@ -239,5 +239,28 @@ describe('PlaceForm', () => {
       });
     });
 
+    describe('Hiding controller buttons', () => {
+      it('should hide the controller buttons if *show-buttons* is set to false', (done) => {
+        compiler.compile(`<place-form show-buttons="false"></place-form>`)
+        .find('div.controllers')
+        .digest((el, controllers) => expect(controllers.length).toBe(0))
+        .digest(done);
+      });
+
+      it('should show the controller buttons if *show-buttons* is not defined', (done) => {
+        compiler.compile(`<place-form></place-form>`)
+        .find('div.controllers')
+        .digest((el, controllers) => expect(controllers.length).toBe(1))
+        .digest(done);
+      });
+
+      it('should show the controller buttons if *show-buttons* is set to true', (done) => {
+        compiler.compile(`<place-form show-buttons="true"></place-form>`)
+        .find('div.controllers')
+        .digest((el, controllers) => expect(controllers.length).toBe(1))
+        .digest(done);
+      });
+    });
+
   });
 });
