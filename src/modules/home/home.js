@@ -3,7 +3,7 @@ import '../auth/login-modal';
 import '../auth/user';
 import '../places/places';
 import '../places/place-details';
-import '../places/place-form';
+import '../places/place-form-modal';
 
 @Component({
   template: require('./home.html')

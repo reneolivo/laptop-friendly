@@ -6,6 +6,11 @@
   ng-click="$ctrl.loginModal.open()"
   >Login</button>
 
+  <button class="create"
+  ng-if="$ctrl.user != null"
+  ng-click="$ctrl.placeFormModal.open()"
+  >Add new place</button>
+
   <login-modal
   login-modal-ctrl="$ctrl.loginModal"
   ></login-modal>
@@ -13,4 +18,6 @@
   <places on-place-selected="$ctrl.selectPlace($place)"></places>
 
   <place-details place="$ctrl.selectedPlace"></place-details>
+
+  <place-form-modal controller="$ctrl.placeFormModal"></place-form-modal>
 </div>
