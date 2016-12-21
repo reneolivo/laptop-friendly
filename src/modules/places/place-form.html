@@ -1,12 +1,12 @@
 <form name="formCtrl" id="place-form" on-submit="$ctrl.submit()">
   <div class="input">
     <label for="place-form-name">Name</label>
-    <input name="name" id="place-form-name" ng-model="$ctrl.place.name" />
+    <input name="name" id="place-form-name" ng-model="$ctrl.place.name" required />
   </div>
 
   <div class="input">
     <label for="place-form-address">Address</label>
-    <input name="address" id="place-form-address" ng-model="$ctrl.place.address" />
+    <input name="address" id="place-form-address" ng-model="$ctrl.place.address" required />
   </div>
 
   <div class="input">

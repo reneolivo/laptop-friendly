@@ -32,7 +32,12 @@ describe('Place Form Modal', () => {
     component.controller((el) => el.find('modal'))
     .digest((el, ctrl) => modalCtrl = ctrl)
     .controller((el) => el.find('place-form'))
-    .digest((el, ctrl) => placeFormCtrl = ctrl);
+    .digest((el, ctrl) => placeFormCtrl = ctrl)
+    .digest((el) => el.find('place-form form[name=formCtrl]').scope())
+    .digest((el, ctrl) => {
+      ctrl.formCtrl.$valid = true;
+      ctrl.formCtrl.$invalid = false;
+    });
   }
 
   function attachSpies() {

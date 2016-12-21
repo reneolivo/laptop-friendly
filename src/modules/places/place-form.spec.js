@@ -262,5 +262,34 @@ describe('PlaceForm', () => {
       });
     });
 
+    describe('form control validations', () => {
+      let formCtrl;
+
+      beforeEach(() => {
+        component.controller()
+        .digest((el, ctrl) => formCtrl = component.scope.$$childTail.formCtrl)
+      });
+
+      afterEach((done) => component.digest(done));
+
+      it('should be invalid if the name is not defined', () => {
+        component.digest(() => expect(formCtrl.name.$valid).toBe(false));
+      });
+
+      it('should be valid if the name is defined', () => {
+        component.sendKeys('[name=name]', 'Snow Cafe')
+        .digest(() => expect(formCtrl.name.$valid).toBe(true));
+      });
+
+      it('should be invalid if the address is not defined', () => {
+        component.digest(() => expect(formCtrl.address.$valid).toBe(false));
+      });
+
+      it('should be valid if the address is defined', () => {
+        component.sendKeys('[name=address]', 'Somewhere street 123')
+        .digest(() => expect(formCtrl.address.$valid).toBe(true));
+      });
+
+    });
   });
 });
